@@ -1,0 +1,29 @@
+{
+  "name": "models",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "npx sequelize-cli db:migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "config": "^2.0.1",
+    "dotenv": "^8.2.0",
+    "mysql2": "^3.23.2",
+    "sequelize": "^6.37.8",
+    "sequelize-cli": "^5.5.1",
+    "sequelize-typescript": "^2.1.6",
+    "ts-node": "^8.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "@types/sequelize": "^4.28.14",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  }
+}
