@@ -1,10 +1,11 @@
 import {Table, Column, Model, DataType, Index} from 'sequelize-typescript';
+import {IUser} from "../../../shared/models/user";
 
 @Table({
     tableName: 'user',
     charset: 'utf8mb4'
 })
-export default class User extends Model<User> {
+export default class User extends Model<IUser> {
     @Column({
         type: DataType.STRING,
         allowNull: false,
