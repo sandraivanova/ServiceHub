@@ -25,12 +25,12 @@ export class AuthService {
         const payload = { email: user.email, sub: user.id };
 
         const accessToken = this.jwtService.sign(payload, {
-            secret: process.env.JWT_ACCESS_SECRET || 'access-secret-key',
+            secret: process.env['JWT_ACCESS_SECRET'] || 'access-secret-key',
             expiresIn: '15m',
         });
 
         const refreshToken = this.jwtService.sign(payload, {
-            secret: process.env.JWT_REFRESH_SECRET || 'refresh-secret-key',
+            secret: process.env['JWT_REFRESH_SECRET'] || 'refresh-secret-key',
             expiresIn: '7d',
         });
 

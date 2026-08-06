@@ -1,4 +1,5 @@
 import {Module} from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {SequelizeModule} from '@nestjs/sequelize';
@@ -7,6 +8,7 @@ import {UsersService} from "./service/user.service";
 import {UserController} from "./server/user.controller";
 import {User} from "../../models";
 import {AuthController} from "./server/auth.contoller";
+import {AuthService} from "./service/auth.service";
 
 @Module({
     imports: [
@@ -24,10 +26,14 @@ import {AuthController} from "./server/auth.contoller";
             models: [User],
             autoLoadModels: true,
             synchronize: false,
-        })
+        }),
+        JwtModule.register({
+            secret: process.env['JWT_ACCESS_SECRET'] || 'access-secret-key',
+            signOptions: { expiresIn: '15m' },
+        }),
     ],
     controllers: [AppController,UserController, AuthController],
-    providers: [AppService,UsersService],
+    providers: [AppService,UsersService,AuthService],
 })
 export class AppModule {
 }

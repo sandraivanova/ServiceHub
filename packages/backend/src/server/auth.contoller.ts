@@ -43,7 +43,6 @@ export class AuthController {
     @Post('logout')
     @HttpCode(200)
     async logout(@Req() req: Request) {
-        // todo testeing source then remove
         const {refreshToken} = req.body;
         if (!refreshToken) {
             throw new UnauthorizedException();

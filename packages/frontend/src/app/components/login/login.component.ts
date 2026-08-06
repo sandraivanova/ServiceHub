@@ -33,17 +33,16 @@ export class LoginComponent {
       return;
     }
 
-    const {email, password} = this.loginForm.value;
+    const email=this.loginForm.get('email')?.value;
+    const password=this.loginForm.get('password')?.value;
+
+
 
     this.http.post<any>('http://localhost:3000/api/auth/login', {email, password})
       .subscribe({
         next: (response) => {
           localStorage.setItem('accessToken', response.accessToken);
           localStorage.setItem('refreshToken', response.refreshToken);
-
-          if (response.firstName) {
-            localStorage.setItem('userName', response.firstName);
-          }
 
           this.router.navigate(['/home']).then(() => {
             window.location.reload();
