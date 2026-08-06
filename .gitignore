@@ -104,3 +104,7 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+packages/backend/node_modules
+packages/backend/dist
+packages/backend/build
