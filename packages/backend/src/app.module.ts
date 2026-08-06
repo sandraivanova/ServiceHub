@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
@@ -9,6 +9,13 @@ import {UserController} from "./server/user.controller";
 import {User} from "../../models";
 import {AuthController} from "./server/auth.contoller";
 import {AuthService} from "./service/auth.service";
+import {CurrentUserFromJwtMiddleware} from "./middleware/CurrentUserFromJwtMiddleware";
+
+const CONTROLLERS = [
+    AppController,
+    UserController,
+    AuthController
+]
 
 @Module({
     imports: [
@@ -32,8 +39,12 @@ import {AuthService} from "./service/auth.service";
             signOptions: { expiresIn: '15m' },
         }),
     ],
-    controllers: [AppController,UserController, AuthController],
+    controllers: [...CONTROLLERS],
     providers: [AppService,UsersService,AuthService],
 })
-export class AppModule {
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(CurrentUserFromJwtMiddleware).forRoutes(...CONTROLLERS);
+    }
+
 }

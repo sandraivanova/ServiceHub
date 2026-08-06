@@ -1,6 +1,6 @@
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {User} from "../../../models";
-import { IUser } from "../../../shared/models/user";
+import {IUser} from "../../../shared/models/user";
 
 @Injectable()
 export class UsersService {
@@ -15,15 +15,15 @@ export class UsersService {
         return User.create(userData);
     }
 
-    async findOneByPk(id: number){
-        const user =await User.findByPk(id);
-        if (!user){
+    async findOneByPk(id: number) {
+        const user = await User.findByPk(id);
+        if (!user) {
             throw new NotFoundException('User does not exsist')
         }
         return user;
     }
 
-    async findAll(){
+    async findAll() {
         return User.findAll()
     }
 

@@ -1,5 +1,5 @@
-import {Table, Column, Model, DataType, Index} from 'sequelize-typescript';
-import {IUser} from "../../../shared/models/user";
+import {Column, DataType, Model, Table} from 'sequelize-typescript';
+import {IUser} from "../../../shared/models";
 
 @Table({
     tableName: 'user',

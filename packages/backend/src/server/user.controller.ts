@@ -1,11 +1,18 @@
 import {Body, Controller, Delete, Get, Param, Post, Put} from "@nestjs/common";
 import {UsersService} from "../service/user.service";
-import {IUser} from "../../../shared/models/user"
+import {IUser} from "../../../shared/models";
+import {CurrentProfile} from "../middleware/decorators/currentProfile.decorator";
+import {User} from "../../../models";
 
 
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UsersService) {
+    }
+
+    @Get('current-user')
+    async getCurrentUser(@CurrentProfile() user: User) {
+        return user;
     }
 
     @Post()

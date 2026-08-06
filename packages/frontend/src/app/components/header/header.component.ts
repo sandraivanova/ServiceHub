@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {Router, RouterLink} from '@angular/router';
+import {Observable} from "rxjs";
+import {IUser} from "@dnevnica/shared";
+import {ApiService} from "../../services/api.service";
 
 @Component({
   selector: 'app-header',
@@ -11,30 +14,19 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   isLoggedIn: boolean = false;
-  userName: string = '';
+  user$!: Observable<IUser | null>;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private apiService: ApiService) {
+  }
 
   ngOnInit() {
-    this.checkAuthStatus();
+    this.user$ = this.apiService.getCurrentUser();
   }
 
-  checkAuthStatus() {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      this.isLoggedIn = true;
-      this.userName = localStorage.getItem('userName') || '';
-    } else {
-      this.isLoggedIn = false;
-    }
-  }
-
-  // Функција за одјава
   logout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userName'); // Бришење и на името при одјава
     this.isLoggedIn = false;
-    this.router.navigate(['/home']); // Те носи на почетна (или /login)
+    this.router.navigate(['/home']);
   }
 }

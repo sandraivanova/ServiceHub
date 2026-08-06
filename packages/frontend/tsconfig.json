@@ -16,6 +16,10 @@
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dnevnica/shared": ["../shared/models/index.ts"]
+    },
     "target": "ES2022",
     "module": "ES2022",
     "lib": [

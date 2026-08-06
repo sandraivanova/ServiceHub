@@ -38,7 +38,8 @@ export class AuthController {
             ...session,
             firstName: user.firstName,
             lastName: user.lastName
-        };    }
+        };
+    }
 
     @Post('logout')
     @HttpCode(200)
@@ -101,7 +102,7 @@ export class AuthController {
 }
 
 export function getSessionForEmail(userEmail: string, userId: number) {
-    const payload = {email: userEmail, sub: userId, loggedIn: new Date()};
+    const payload = {email: userEmail, sub: userId, id: userId, loggedIn: new Date()};
 
     const accessToken = jwt.sign(payload, JWT_SECRET, {expiresIn: '15m'});
     const refreshToken = jwt.sign(payload, REFRESH_SECRET, {expiresIn: '7d'});

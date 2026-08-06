@@ -3,12 +3,13 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {CommonModule} from "@angular/common";
+import {ApiService} from "../../services/api.service";
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    ReactiveFormsModule,CommonModule
+    ReactiveFormsModule, CommonModule
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -20,7 +21,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private apiService: ApiService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -33,25 +35,22 @@ export class LoginComponent {
       return;
     }
 
-    const email=this.loginForm.get('email')?.value;
-    const password=this.loginForm.get('password')?.value;
+    const email = this.loginForm.get('email')?.value;
+    const password = this.loginForm.get('password')?.value;
 
+    this.apiService.login(email, password).subscribe({
+      next: (response) => {
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
 
-
-    this.http.post<any>('http://localhost:3000/api/auth/login', {email, password})
-      .subscribe({
-        next: (response) => {
-          localStorage.setItem('accessToken', response.accessToken);
-          localStorage.setItem('refreshToken', response.refreshToken);
-
-          this.router.navigate(['/home']).then(() => {
-            window.location.reload();
-          });
-        },
-        error: (err) => {
-          this.errorMessage = err.error?.message || 'Login error';
-        }
-      })
+        this.router.navigate(['/home']).then(() => {
+          window.location.reload();
+        });
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Login error';
+      }
+    })
 
   }
 }
