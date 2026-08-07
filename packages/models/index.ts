@@ -3,11 +3,11 @@ import { Sequelize, SequelizeOptions } from "sequelize-typescript";
 
 export default new Sequelize({
     dialect: "mysql",
-    database: process.env.DB_DATABASE || "rdc",
-    host: process.env.DB_HOST,
+    database: process.env['DB_DATABASE'] || "rdc",
+    host: process.env['DB_HOST'],
     port: 3306,
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
+    username: process.env['DB_USERNAME'],
+    password: process.env['DB_PASSWORD'],
     logging: false,
     models: [
         __dirname + `/src/db-models/*${__filename.endsWith(".ts") ? ".ts" : ".js"}`,
