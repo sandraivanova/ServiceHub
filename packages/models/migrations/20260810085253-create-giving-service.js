@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('giving_services', {
+    await queryInterface.createTable('giving_service', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -24,18 +24,45 @@ module.exports = {
         allowNull: false
       },
 
-      priceFrom: {
+      price: {
         type: Sequelize.FLOAT,
         allowNull: false
       },
 
       priceUnit: {
-        type: Sequelize.ENUM('hour', 'project', 'square_meter', 'day'),
+        type: Sequelize.ENUM(
+            'HOUR',
+            'PROJECT',
+            'SQUARE_METER',
+            'DAY',
+            'WEEK',
+            'MONTH',
+            'PIECE',
+            'LINEAR_METER',
+            'SESSION',
+            'PER_KM'
+        ),
         allowNull: false
       },
 
       category: {
-        type: Sequelize.ENUM('electrician', 'plumber', 'cleaning', 'painting', 'carpentry', 'other'),
+        type: Sequelize.ENUM(
+            'ELECTRICIAN',
+            'PLUMBER',
+            'CLEANING',
+            'PAINTING',
+            'CARPENTRY',
+            'CONSTRUCTION',
+            'HVAC',
+            'APPLIANCE_REPAIR',
+            'GARDENING',
+            'TAILORING',
+            'TRANSPORT',
+            'LOCKSMITH',
+            'EDUCATION',
+            'IT_SERVICES',
+            'OTHER'
+        ),
         allowNull: false
       },
 
@@ -50,17 +77,6 @@ module.exports = {
       },
 
       yearsOfExperience: {
-        type: Sequelize.INTEGER,
-        allowNull: true
-      },
-
-      rating: {
-        type: Sequelize.FLOAT,
-        allowNull: true,
-        defaultValue: 0
-      },
-
-      bookingCount: {
         type: Sequelize.INTEGER,
         allowNull: true
       },
@@ -96,6 +112,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('giving_services');
+    await queryInterface.dropTable('giving_service');
   }
 };

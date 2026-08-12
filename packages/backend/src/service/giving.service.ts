@@ -1,14 +1,16 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import  GivingService from "../../../models/src/db-models/giving.service";
+import { IGivingService } from "../../../shared/models";
 
 @Injectable()
 export class GivingServicesService {
     constructor() {}
 
-    async create(serviceData: any, id: number) {
-        serviceData.providerId = id;
-
-        return await GivingService.create(serviceData);
+    async create(serviceData: IGivingService, user_id: number) {
+        return await GivingService.create({
+            ...serviceData,
+            providerId: user_id
+        } as any);
     }
 
     async findAll() {
@@ -27,7 +29,7 @@ export class GivingServicesService {
         return service;
     }
 
-    async update(id: number, serviceData: any) {
+    async update(id: number, serviceData: IGivingService) {
         const service = await this.findOneByPk(id);
 
         await service.update(serviceData);

@@ -1,23 +1,8 @@
 import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import User from "./user";
+import {PriceUnit, ServiceCategory} from "../../../shared/models";
 
-export enum PriceUnit {
-    HOUR = 'hour',
-    PROJECT = 'project',
-    SQUARE_METER = 'square_meter',
-    DAY = 'day',
-}
-
-export enum ServiceCategory {
-    ELECTRICIAN = 'electrician',
-    PLUMBER = 'plumber',
-    CLEANING = 'cleaning',
-    PAINTING = 'painting',
-    CARPENTRY = 'carpentry',
-    OTHER = 'other',
-}
-
-@Table({ tableName: 'giving_services', timestamps: true })
+@Table({ tableName: 'giving_service', timestamps: true })
 export default class GivingService extends Model<GivingService>{
 
     @ForeignKey(() => User)
@@ -26,9 +11,6 @@ export default class GivingService extends Model<GivingService>{
         allowNull: false,
     })
     declare providerId: number;
-
-    @BelongsTo(() => User)
-    declare provider: User;
 
     @Column({
         type: DataType.STRING,
@@ -40,7 +22,7 @@ export default class GivingService extends Model<GivingService>{
         type: DataType.NUMBER,
         allowNull: false,
     })
-    declare priceFrom: number;
+    declare price: number;
 
     @Column({
         type: DataType.ENUM(...Object.values(PriceUnit)),
@@ -74,18 +56,6 @@ export default class GivingService extends Model<GivingService>{
     declare yearsOfExperience: number;
 
     @Column({
-        type: DataType.NUMBER,
-        allowNull: true,
-        defaultValue: 0,
-    })
-    declare rating: number;
-
-    @Column({
-        type: DataType.NUMBER
-    })
-    declare bookingCount: number;
-
-    @Column({
         type: DataType.STRING,
         allowNull: true
     })
@@ -102,5 +72,8 @@ export default class GivingService extends Model<GivingService>{
         allowNull: true
     })
     declare availability: string;
+
+    @BelongsTo(() => User)
+    declare provider: User;
 
 }
