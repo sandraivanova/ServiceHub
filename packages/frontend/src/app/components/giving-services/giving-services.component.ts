@@ -1,16 +1,17 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {ApiService} from "../../services/api.service";
-import {IGivingService, PriceUnit, ServiceCategory} from "@dnevnica/shared";
+import {IGivingService, Location, PriceUnit, ServiceCategory} from "@dnevnica/shared";
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {Observable} from "rxjs";
+import { ServiceFilterComponent } from '../service-filter/service-filter.component';
 
 @Component({
   selector: 'app-giving-services',
   standalone: true,
   imports: [
-    FormsModule, CommonModule, RouterLink
+    FormsModule, CommonModule, RouterLink, ServiceFilterComponent
   ],
   templateUrl: './giving-services.component.html',
   styleUrl: './giving-services.component.scss'
@@ -20,6 +21,7 @@ export class GivingServicesComponent {
 
   priceUnits = Object.values(PriceUnit);
   categories = Object.values(ServiceCategory);
+  locations = Object.values(Location);
 
   newService: IGivingService = {
     providerId: 1,
@@ -27,7 +29,7 @@ export class GivingServicesComponent {
     price: 0,
     priceUnit: PriceUnit.HOUR,
     category: ServiceCategory.OTHER,
-    location: '',
+    location: Location.KOCANI,
     description: '',
     yearsOfExperience: 1,
     imageUrl: '',
@@ -54,6 +56,14 @@ export class GivingServicesComponent {
         this.closeModal()
       },
       error: (err) => console.error('Error while creating', err)
+    });
+  }
+
+  onApplyFilter(filters: { searchTerm: string; category: string; location: string }) {
+    this.services$ = this.apiService.getAll({
+      search: filters.searchTerm,
+      category: filters.category,
+      location: filters.location
     });
   }
 

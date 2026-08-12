@@ -1,21 +1,26 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
-import { GivingServicesService } from '../service/giving.service';
+import {Controller, Get, Post, Body, Param, Put, Delete, Query} from '@nestjs/common';
+import {GivingServicesService} from '../service/giving.service';
 import {CurrentProfile} from "../middleware/decorators/currentProfile.decorator";
 import {User} from "../../../models";
-import { IGivingService } from "../../../shared/models";
+import {IGivingService} from "../../../shared/models";
 
 @Controller('giving-services')
 export class GivingServicesController {
-    constructor(private readonly givingServicesService: GivingServicesService) {}
+    constructor(private readonly givingServicesService: GivingServicesService) {
+    }
 
     @Post()
-    async create(@Body() body: IGivingService,@CurrentProfile() user: User) {
+    async create(@Body() body: IGivingService, @CurrentProfile() user: User) {
         return await this.givingServicesService.create(body, user.id);
     }
 
     @Get()
-    async findAll() {
-        return await this.givingServicesService.findAll();
+    async findAll(
+        @Query('search') search?: string,
+        @Query('category') category?: string,
+        @Query('location') location?: string,
+    ) {
+        return await this.givingServicesService.findAll({search, category, location});
     }
 
     @Get(':id')

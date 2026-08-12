@@ -1,6 +1,6 @@
 import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import User from "./user";
-import {PriceUnit, ServiceCategory} from "../../../shared/models";
+import {Location, PriceUnit, ServiceCategory} from "../../../shared/models";
 
 @Table({ tableName: 'giving_service', timestamps: true })
 export default class GivingService extends Model<GivingService>{
@@ -37,7 +37,7 @@ export default class GivingService extends Model<GivingService>{
     declare category: ServiceCategory;
 
     @Column({
-        type:DataType.STRING,
+        type: DataType.ENUM(...Object.values(Location)),
         allowNull: false
     })
     declare location: string;
