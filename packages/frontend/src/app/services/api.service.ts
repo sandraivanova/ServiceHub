@@ -18,7 +18,7 @@ export class ApiService {
     return this.http.get<IUser>('http://localhost:3000/api/users/current-user');
   }
 
-  getAll(filters?: { search?: string; category?: string; location?: string }): Observable<IGivingService[]> {
+  getAllGivingServices(filters?: { search?: string; category?: string; location?: string }): Observable<IGivingService[]> {
     let params = new HttpParams();
 
     if (filters?.search) params = params.set('search', filters.search);

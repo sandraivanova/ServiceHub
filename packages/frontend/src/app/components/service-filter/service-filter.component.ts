@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
-import {ServiceCategory, Location} from "@dnevnica/shared";
+import {ServiceCategory, Location, CATEGORY_LABELS, LOCATION_LABELS} from "@dnevnica/shared";
 
 @Component({
   selector: 'app-service-filter',
@@ -12,17 +12,20 @@ import {ServiceCategory, Location} from "@dnevnica/shared";
   styleUrl: './service-filter.component.scss'
 })
 export class ServiceFilterComponent {
-  searchTerm: string = '';
-  category: string = '';
-  location: string = '';
+  searchTerm = '';
+  category = '';
+  location = '';
+
+  categoryLabels=CATEGORY_LABELS;
+  locationLabels= LOCATION_LABELS;
 
   categories = (Object.values(ServiceCategory));
   locations = Object.values(Location);
 
-  @Output() filterChange = new EventEmitter<{searchTerm: string, category: string, location: string}>();
+  @Output() filterChangeEmmiter = new EventEmitter<{ searchTerm: string, category: string, location: string }>();
 
   emitFilters() {
-    this.filterChange.emit({
+    this.filterChangeEmmiter.emit({
       searchTerm: this.searchTerm,
       category: this.category,
       location: this.location

@@ -1,17 +1,17 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import  GivingService from "../../../models/src/db-models/giving.service";
-import { IGivingService } from "../../../shared/models";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import GivingService from "../../../models/src/db-models/giving.service";
+import {IGivingService} from "../../../shared/models";
 import {Op} from "sequelize";
+import {User} from "../../../models";
 
 @Injectable()
 export class GivingServicesService {
-    constructor() {}
+    constructor() {
+    }
 
     async create(serviceData: IGivingService, user_id: number) {
-        return await GivingService.create({
-            ...serviceData,
-            providerId: user_id
-        } as any);
+        serviceData.providerId = user_id
+        return await GivingService.create(serviceData);
     }
 
     async findAll(filters?: { search?: string; category?: string; location?: string }) {
@@ -27,20 +27,25 @@ export class GivingServicesService {
 
         if (filters?.search) {
             where[Op.or] = [
-                { title: { [Op.iLike]: `%${filters.search}%` } },
-                { description: { [Op.iLike]: `%${filters.search}%` } }
+                {title: {[Op.like]: `%${filters.search}%`}}
             ];
         }
 
         return await GivingService.findAll({
             where,
-            include: ['provider']
+            include: [{
+                model: User,
+                as: 'provider'
+            }]
         });
     }
 
     async findOneByPk(id: number) {
         const service = await GivingService.findByPk(id, {
-            include: ['provider']
+            include: [{
+                model: User,
+                as: 'provider'
+            }]
         });
         if (!service) {
             throw new NotFoundException('Услугата не постои.');
@@ -58,6 +63,6 @@ export class GivingServicesService {
     async remove(id: number) {
         const service = await this.findOneByPk(id);
         await service.destroy();
-        return { message: 'Успешно избришана услуга.' };
+        return {message: 'Успешно избришана услуга.'};
     }
 }

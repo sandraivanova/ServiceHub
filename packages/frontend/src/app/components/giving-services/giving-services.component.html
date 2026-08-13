@@ -12,7 +12,7 @@
     </button>
   </div>
 
-  <app-service-filter (filterChange)="onApplyFilter($event)"></app-service-filter>
+  <app-service-filter (filterChangeEmmiter)="onApplyFilter($event)"></app-service-filter>
 
   @if (isModalOpen) {
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
@@ -25,19 +25,19 @@
           </button>
         </div>
 
-        <form (submit)="createService()" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+        <form [formGroup]="serviceForm" (submit)="createService()" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Наслов</label>
-              <input type="text" placeholder="пр. Професионално молерирање" [(ngModel)]="newService.title" name="title"
+              <input type="text" placeholder="пр. Професионално молерирање" formControlName="title"
                      required
                      class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Цена од (€)</label>
-              <input type="number" placeholder="пр. 50" [(ngModel)]="newService.price" name="price" required
+              <input type="number" placeholder="пр. 50" formControlName="price"
                      class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
             </div>
           </div>
@@ -46,19 +46,19 @@
             <div>
               <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Единица за
                 цена</label>
-              <select [(ngModel)]="newService.priceUnit" name="priceUnit"
+              <select formControlName="priceUnit"
                       class="w-full px-4 py-2.5 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
                 @for (unit of priceUnits; track unit) {
-                  <option [value]="unit">{{ unit }}</option>
+                  <option [value]="unit">{{ priceUnitLabels[unit] }}</option>
                 }            </select>
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Категорија</label>
-              <select [(ngModel)]="newService.category" name="category"
+              <select formControlName="category"
                       class="w-full px-4 py-2.5 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
                 @for (cat of categories; track cat) {
-                  <option [value]="cat">{{ cat }}</option>
+                  <option [value]="cat">{{ categoryLabels[cat] }}</option>
                 }            </select>
             </div>
           </div>
@@ -67,13 +67,13 @@
             <div>
               <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Години
                 искуство</label>
-              <input type="number" placeholder="пр. 5" [(ngModel)]="newService.yearsOfExperience"
+              <input type="number" placeholder="пр. 5" formControlName="yearsOfExperience"
                      name="yearsOfExperience"
                      class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
             </div>
             <div>
               <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Достапност</label>
-              <input type="text" placeholder="пр. Флексибилно / Секој работен ден" [(ngModel)]="newService.availability"
+              <input type="text" placeholder="пр. Флексибилно / Секој работен ден" formControlName="availability"
                      name="availability"
                      class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
             </div>
@@ -83,22 +83,22 @@
             <div>
               <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Телефон за
                 контакт</label>
-              <input type="text" placeholder="пр. 070 123 456" [(ngModel)]="newService.phone" name="phone" required
+              <input type="text" placeholder="пр. 070 123 456" formControlName="phone"
                      class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
             </div>
             <div>
               <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Локација</label>
-              <select [(ngModel)]="newService.location" name="location"
+              <select formControlName="location"
                       class="w-full px-4 py-2.5 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm">
                 @for (loc of locations; track loc) {
-                  <option [value]="loc">{{ loc }}</option>
+                  <option [value]="loc">{{ locationLabels[loc] }}</option>
                 }            </select>
             </div>
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Опис</label>
-            <textarea placeholder="Внесете детален опис на вашата услуга..." [(ngModel)]="newService.description"
+            <textarea placeholder="Внесете детален опис на вашата услуга..." formControlName="description"
                       name="description" required rows="3"
                       class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm"></textarea>
           </div>
@@ -129,7 +129,7 @@
             <div>
               <div class="flex justify-between items-start mb-3">
                 <span
-                  class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-medium">{{ s.category }}</span>
+                  class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-medium">{{ categoryLabels[s.category] }}</span>
               </div>
 
               <h4 class="text-lg font-bold text-gray-900">{{ s.title }}</h4>
@@ -138,7 +138,7 @@
               <div class="mt-4 space-y-1.5 text-sm text-gray-600">
                 <div class="flex items-center gap-2">
                   <span>📍</span>
-                  <span class="font-medium text-gray-700">{{ s.location }}</span>
+                  <span class="font-medium text-gray-700">{{ locationLabels[s.location] }}</span>
                 </div>
               </div>
             </div>
@@ -146,7 +146,7 @@
             <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
               <div>
                 <span class="text-lg font-bold text-gray-900">{{ s.price }}€</span>
-                <span class="text-xs text-gray-500 block">/ {{ s.priceUnit }}</span>
+                <span class="text-xs text-gray-500 block">/ {{ priceUnitLabels[s.priceUnit] }}</span>
               </div>
               <a [routerLink]="['/giving-services', s.id]"
                  class="px-4 py-2 border border-blue-600 text-blue-600 hover:bg-blue-50 font-medium rounded-xl text-sm transition">

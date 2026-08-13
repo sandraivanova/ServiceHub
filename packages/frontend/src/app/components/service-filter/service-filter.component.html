@@ -8,14 +8,14 @@
   <select [(ngModel)]="category" (ngModelChange)="emitFilters()">
     <option value="">Сите категории</option>
     @for (cat of categories; track cat) {
-      <option [value]="cat">{{cat}}</option>
+      <option [value]="cat">{{ categoryLabels[cat] }}</option>
     }
   </select>
 
   <select [(ngModel)]="location" (ngModelChange)="emitFilters()">
     <option value="">Сите локации</option>
     @for (loc of locations; track loc) {
-      <option [value]="loc">{{loc}}</option>
+      <option [value]="loc">{{ locationLabels[loc] }}</option>
     }
   </select>
 </div>
