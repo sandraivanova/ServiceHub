@@ -1,9 +1,9 @@
-import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
+import {BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, Table, UpdatedAt} from "sequelize-typescript";
 import User from "./user";
-import {Location, PriceUnit, ServiceCategory} from "../../../shared/models";
+import {IGivingService, Location, PriceUnit, ServiceCategory} from "../../../shared/models";
 
 @Table({ tableName: 'giving_service', timestamps: true })
-export default class GivingService extends Model<GivingService>{
+export default class GivingService extends Model<IGivingService>{
 
     @ForeignKey(() => User)
     @Column({
@@ -76,4 +76,17 @@ export default class GivingService extends Model<GivingService>{
     @BelongsTo(() => User)
     declare provider: User;
 
+    @CreatedAt
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+    })
+    declare createdAt: Date;
+
+    @UpdatedAt
+    @Column({
+        type: DataType.DATE,
+        allowNull: false,
+    })
+    declare updatedAt: Date;
 }
