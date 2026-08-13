@@ -29,7 +29,8 @@ export {
     where,
     col,
     literal,
+    Sequelize
 } from "sequelize";
 
-
 export { default as User} from "./src/db-models/user";
+export { default as GivingService} from "./src/db-models/giving.service";
