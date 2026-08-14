@@ -14,7 +14,7 @@ export class GivingServicesService {
         return await GivingService.create(serviceData);
     }
 
-    async findAll(filters?: { search?: string; category?: string; location?: string }) {
+    async findAll(filters?: { title?: string; category?: string; location?: string }) {
         const where: any = {};
 
         if (filters?.category) {
@@ -25,10 +25,8 @@ export class GivingServicesService {
             where.location = filters.location;
         }
 
-        if (filters?.search) {
-            where[Op.or] = [
-                {title: {[Op.like]: `%${filters.search}%`}}
-            ];
+        if (filters?.title) {
+            where.title = { [Op.like]: `%${filters.title}%` };
         }
 
         return await GivingService.findAll({
