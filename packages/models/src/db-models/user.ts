@@ -1,4 +1,4 @@
-import {Column, DataType, Model, Table} from 'sequelize-typescript';
+import {Column, CreatedAt, DataType, Model, Table, UpdatedAt} from 'sequelize-typescript';
 import {IUser} from "../../../shared/models";
 
 @Table({
@@ -38,12 +38,14 @@ export default class User extends Model<IUser> {
     })
     declare isEmailVerified: boolean;
 
+    @CreatedAt
     @Column({
         type: DataType.DATE,
         allowNull: false,
     })
     declare createdAt: Date;
 
+    @UpdatedAt
     @Column({
         type: DataType.DATE,
         allowNull: false,

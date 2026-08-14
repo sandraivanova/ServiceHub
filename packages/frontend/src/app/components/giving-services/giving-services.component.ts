@@ -1,43 +1,60 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {ApiService} from "../../services/api.service";
-import {IGivingService, PriceUnit, ServiceCategory} from "@dnevnica/shared";
-import {FormsModule} from "@angular/forms";
+import {
+  CATEGORY_LABELS,
+  IGivingService,
+  Location, LOCATION_LABELS,
+  PRICE_UNIT_LABELS,
+  PriceUnit,
+  ServiceCategory
+} from "@dnevnica/shared";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CommonModule} from "@angular/common";
-import {ActivatedRoute, RouterLink} from "@angular/router";
+import {RouterLink} from "@angular/router";
 import {Observable} from "rxjs";
+import {ServiceFilterComponent} from '../service-filter/service-filter.component';
 
 @Component({
   selector: 'app-giving-services',
   standalone: true,
   imports: [
-    FormsModule, CommonModule, RouterLink
+    FormsModule, CommonModule, RouterLink, ServiceFilterComponent, ReactiveFormsModule
   ],
   templateUrl: './giving-services.component.html',
   styleUrl: './giving-services.component.scss'
 })
-export class GivingServicesComponent {
+export class GivingServicesComponent implements OnInit {
+
+  private readonly apiService = inject(ApiService)
+  private readonly fb = inject(FormBuilder);
+
+  services$!: Observable<IGivingService[]>
   isModalOpen = false;
+
+  priceUnitLabels = PRICE_UNIT_LABELS;
+  categoryLabels=CATEGORY_LABELS;
+  locationLabels= LOCATION_LABELS;
 
   priceUnits = Object.values(PriceUnit);
   categories = Object.values(ServiceCategory);
+  locations = Object.values(Location);
 
-  newService: IGivingService = {
-    providerId: 1,
-    title: '',
-    price: 0,
-    priceUnit: PriceUnit.HOUR,
-    category: ServiceCategory.OTHER,
-    location: '',
-    description: '',
-    yearsOfExperience: 1,
-    imageUrl: '',
-    phone: '',
-    availability: ''
-  };
+  serviceForm: FormGroup = this.fb.group({
+    title: ['', Validators.required],
+    price: [0, [Validators.required, Validators.min(0)]],
+    priceUnit: [PriceUnit.HOUR, Validators.required],
+    category: [ServiceCategory.OTHER, Validators.required],
+    yearsOfExperience: [1, [Validators.required, Validators.min(0)]],
+    availability: [''],
+    phone: ['', Validators.required],
+    location: [Location.KOCANI, Validators.required],
+    description: ['', Validators.required],
+    imageUrl: ['']
+  });
 
-  private readonly apiService=inject(ApiService)
-  services$: Observable<IGivingService[]> = this.apiService.getAll();
-
+  ngOnInit(): void {
+    this.services$ = this.apiService.getAllGivingServices()
+  }
 
   openModal() {
     this.isModalOpen = true;
@@ -48,14 +65,25 @@ export class GivingServicesComponent {
   }
 
   createService() {
-    this.apiService.create(this.newService).subscribe({
+    if (this.serviceForm.invalid) {
+      this.serviceForm.markAllAsTouched();
+      return;
+    }
+
+    this.apiService.create(this.serviceForm.value).subscribe({
       next: (res) => {
-        this.services$ = this.apiService.getAll();
+        this.services$ = this.apiService.getAllGivingServices();
         this.closeModal()
       },
       error: (err) => console.error('Error while creating', err)
     });
   }
 
-
+  onApplyFilter(filters: { searchTerm: string; category: string; location: string }) {
+    this.services$ = this.apiService.getAllGivingServices({
+      search: filters.searchTerm,
+      category: filters.category,
+      location: filters.location
+    });
+  }
 }
