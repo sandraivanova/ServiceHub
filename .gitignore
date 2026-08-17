@@ -108,3 +108,13 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 packages/backend/node_modules
 packages/backend/dist
 packages/backend/build
+
+# Compiled output of models/shared (emitted in-place, no outDir - see postinstall)
+packages/models/index.js
+packages/models/index.d.ts
+packages/models/*.tsbuildinfo
+packages/models/src/**/*.js
+packages/models/src/**/*.d.ts
+packages/shared/models/*.js
+packages/shared/models/*.d.ts
+packages/shared/*.tsbuildinfo

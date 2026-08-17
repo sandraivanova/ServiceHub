@@ -10,6 +10,7 @@
     "strictPropertyInitialization": false,
     "composite": true,
     "declaration": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node"]
   }
 }
