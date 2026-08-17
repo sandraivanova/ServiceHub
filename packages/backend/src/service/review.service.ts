@@ -1,12 +1,20 @@
-import {IReview} from "../../../shared/models/review";
+import {IReview} from "../../../shared/models";
 import {GivingService, Review, User} from "../../../models";
-import {NotFoundException} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 
+@Injectable()
 export class ReviewService {
-    constructor() {}
+    constructor() {
+    }
 
-    async create(reviewData: IReview,user_id: number) {
-        reviewData.userId=user_id;
+    async create(reviewData: IReview, user_id: number) {
+        reviewData.userId = user_id;
+        const existingReview = await Review.findOne({
+            where: { userId: user_id, serviceId: reviewData.serviceId }
+        });
+        if (existingReview) {
+            return await this.update(existingReview.id, reviewData);
+        }
         return await Review.create(reviewData);
     }
 
@@ -37,7 +45,7 @@ export class ReviewService {
         }
 
         return await Review.findAll({
-            where: { serviceId },
+            where: {serviceId},
             include: [{
                 model: User,
                 attributes: ['id', 'firstName', 'lastName']
@@ -49,7 +57,7 @@ export class ReviewService {
     async remove(id: number) {
         const review = await this.findOneByPk(id);
         await review.destroy();
-        return { message: 'Успешно избришана рецензија.' };
+        return {message: 'Успешно избришана рецензија.'};
     }
 
     async update(id: number, reviewData: IReview) {
@@ -57,6 +65,12 @@ export class ReviewService {
 
         await review.update(reviewData);
         return review;
+    }
+
+    async findUserReviewForService(serviceId: number, userId: number) {
+        return await Review.findOne({
+            where: { serviceId, userId }
+        });
     }
 
 }

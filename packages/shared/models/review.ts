@@ -7,6 +7,8 @@ export interface IReview extends DbModel {
     description?: string;
     userId: number;
     serviceId: number;
+
+    // Auto complete
     user: IUser;
     service: IGivingService
 }

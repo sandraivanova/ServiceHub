@@ -4,8 +4,8 @@ import {CurrentProfile} from "../middleware/decorators/currentProfile.decorator"
 import {GivingService, User} from "../../../models";
 import {IReview} from "../../../shared/models";
 
-@Controller('giving-services')
-export class GivingServicesController {
+@Controller('review')
+export class ReviewController {
     constructor(private readonly reviewService: ReviewService) {
     }
 
@@ -22,6 +22,14 @@ export class GivingServicesController {
         }
 
         return await this.reviewService.findAllForService(serviceId)
+    }
+
+    @Get('my-review/:serviceId')
+    async getMyReview(
+        @Param('serviceId') serviceId: number,
+        @CurrentProfile() user: User
+    ) {
+        return await this.reviewService.findUserReviewForService(serviceId, user.id);
     }
 
     @Delete(':id')

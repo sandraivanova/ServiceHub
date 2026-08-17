@@ -52,4 +52,8 @@ export class ApiService {
   deleteReview(id: number): Observable<any> {
     return this.http.delete(`http://localhost:3000/api/review/${id}`);
   }
+
+  getMyReview(serviceId: number) {
+    return this.http.get<IReview | null>(`http://localhost:3000/api/review/my-review/${serviceId}`);
+  }
 }

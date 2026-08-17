@@ -4,11 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import {IGivingService} from "@dnevnica/shared";
+import {ReviewComponent} from "../review/review.component";
 
 @Component({
   selector: 'app-giving-service-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReviewComponent],
   templateUrl: './giving-service-detail.component.html',
   styleUrls: ['./giving-service-detail.component.scss']
 })

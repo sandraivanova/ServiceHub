@@ -12,12 +12,15 @@ import {AuthService} from "./service/auth.service";
 import {CurrentUserFromJwtMiddleware} from "./middleware/CurrentUserFromJwtMiddleware";
 import {GivingServicesController} from "./server/giving_service.controller";
 import {GivingServicesService} from "./service/giving.service";
+import {ReviewController} from "./server/review.controller";
+import {ReviewService} from "./service/review.service";
 
 const CONTROLLERS = [
     AppController,
     UserController,
     AuthController,
-    GivingServicesController
+    GivingServicesController,
+    ReviewController
 ]
 
 const MODELS = [
@@ -50,7 +53,7 @@ const MODELS = [
         }),
     ],
     controllers: [...CONTROLLERS],
-    providers: [AppService, UsersService, AuthService, GivingServicesService],
+    providers: [AppService, UsersService, AuthService, GivingServicesService,ReviewService],
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
