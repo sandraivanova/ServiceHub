@@ -1,5 +1,6 @@
-import {Column, CreatedAt, DataType, Model, Table, UpdatedAt} from 'sequelize-typescript';
+import {Column, CreatedAt, DataType, HasMany, Model, Table, UpdatedAt} from 'sequelize-typescript';
 import {IUser} from "../../../shared/models";
+import Review from "./review";
 
 @Table({
     tableName: 'user',
@@ -51,4 +52,7 @@ export default class User extends Model<IUser> {
         allowNull: false,
     })
     declare updatedAt: Date;
+
+    @HasMany(() => Review)
+    declare reviews: Review[];
 }

@@ -1,12 +1,12 @@
 import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import {JwtModule} from '@nestjs/jwt';
 import {AppController} from './app.controller';
 import {AppService} from './app.service';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {ConfigModule} from "@nestjs/config";
 import {UsersService} from "./service/user.service";
 import {UserController} from "./server/user.controller";
-import {User} from "../../models";
+import {GivingService, Review, User} from "../../models";
 import {AuthController} from "./server/auth.contoller";
 import {AuthService} from "./service/auth.service";
 import {CurrentUserFromJwtMiddleware} from "./middleware/CurrentUserFromJwtMiddleware";
@@ -18,6 +18,12 @@ const CONTROLLERS = [
     UserController,
     AuthController,
     GivingServicesController
+]
+
+const MODELS = [
+    User,
+    GivingService,
+    Review
 ]
 
 @Module({
@@ -33,17 +39,18 @@ const CONTROLLERS = [
             username: process.env.DB_USERNAME,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_DATABASE,
-            models: [User],
+            models: MODELS,
             autoLoadModels: true,
             synchronize: false,
         }),
+        SequelizeModule.forFeature(MODELS),
         JwtModule.register({
             secret: process.env['JWT_ACCESS_SECRET'] || 'access-secret-key',
-            signOptions: { expiresIn: '15m' },
+            signOptions: {expiresIn: '15m'},
         }),
     ],
     controllers: [...CONTROLLERS],
-    providers: [AppService,UsersService,AuthService,GivingServicesService],
+    providers: [AppService, UsersService, AuthService, GivingServicesService],
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {

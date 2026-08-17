@@ -33,4 +33,5 @@ export {
 } from "sequelize";
 
 export { default as User} from "./src/db-models/user";
-export { default as GivingService} from "./src/db-models/giving.service";
+export { default as GivingService} from "./src/db-models/giving-service";
+export { default as Review} from "./src/db-models/review";
