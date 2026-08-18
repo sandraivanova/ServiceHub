@@ -29,6 +29,14 @@ const MODELS = [
     Review
 ]
 
+const SERVICES=[
+    AppService,
+    UsersService,
+    AuthService,
+    GivingServicesService,
+    ReviewService
+]
+
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -53,7 +61,7 @@ const MODELS = [
         }),
     ],
     controllers: [...CONTROLLERS],
-    providers: [AppService, UsersService, AuthService, GivingServicesService,ReviewService],
+    providers: [...SERVICES],
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {

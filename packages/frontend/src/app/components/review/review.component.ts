@@ -24,30 +24,34 @@ export class ReviewComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
 
   reviews$!: Observable<IReview[]>;
+  myReview$!: Observable<IReview>;
   reload$ = new BehaviorSubject(true);
+  reloadMyReview$ = new BehaviorSubject(true);
 
   isReviewModalOpen = false;
+  hoveredRating: number = 0;
 
   reviewForm: FormGroup = this.fb.group({
-    rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
-    description: ['']
+    rating: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
+    description: ['', Validators.maxLength(512)]
   });
 
-  ngOnInit(): void {
+  ngOnInit() {
     if (this.serviceId) {
       this.loadReviews();
     }
   }
 
-  hoveredRating: number = 0;
-
-  setRating(rating: number): void {
+  setRating(rating: number) {
     this.reviewForm.get('rating')?.setValue(rating);
   }
 
-  loadReviews(): void {
+  loadReviews() {
     this.reviews$ = this.reload$.pipe(
       switchMap(() => this.apiService.getReviewsForService(this.serviceId))
+    );
+    this.myReview$ = this.reloadMyReview$.pipe(
+      switchMap(() => this.apiService.getMyReview(this.serviceId))
     );
   }
 
@@ -62,33 +66,29 @@ export class ReviewComponent implements OnInit {
     return Number((sum / reviews.length).toFixed(1));
   }
 
+  deleteReview(reviewId:number){
 
-  openReviewModal() {
-    this.apiService.getMyReview(this.serviceId).subscribe({
-      next: (existingReview: IReview | null) => {
-        if (existingReview) {
-          this.reviewForm.patchValue({
-            rating: existingReview.rating,
-            description: existingReview.description
-          });
-        } else {
-          this.reviewForm.reset({ rating: 5, description: '' });
-        }
-        this.isReviewModalOpen = true;
-      },
-      error: () => {
-        this.reviewForm.reset({ rating: 5, description: '' });
-        this.isReviewModalOpen = true;
-      }
-    });
+  }
+
+
+  openReviewModal(existingReview?: IReview | null) {
+    if (existingReview) {
+      this.reviewForm.patchValue({
+        rating: existingReview.rating,
+        description: existingReview.description
+      });
+    } else {
+      this.reviewForm.reset({rating: 1, description: ''});
+    }
+    this.isReviewModalOpen = true;
   }
 
   closeReviewModal() {
     this.isReviewModalOpen = false;
-    this.reviewForm.reset({rating: 5, description: ''});
+    this.reviewForm.reset({rating: 1, description: ''});
   }
 
-  submitReview(): void {
+  submitReview() {
     if (this.reviewForm.invalid) {
       this.reviewForm.markAllAsTouched();
       return;
@@ -108,6 +108,7 @@ export class ReviewComponent implements OnInit {
       next: () => {
         this.closeReviewModal();
         this.reload$.next(true);
+        this.reloadMyReview$.next(true);
       },
       error: (err) => console.error('Грешка при зачувување на рецензија', err)
     });

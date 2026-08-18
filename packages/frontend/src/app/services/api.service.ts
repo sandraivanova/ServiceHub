@@ -54,6 +54,10 @@ export class ApiService {
   }
 
   getMyReview(serviceId: number) {
-    return this.http.get<IReview | null>(`http://localhost:3000/api/review/my-review/${serviceId}`);
+    return this.http.get<IReview>(`http://localhost:3000/api/review/my-review/${serviceId}`);
+  }
+
+  updateReview(id: number, reviewData: IReview): Observable<IReview> {
+    return this.http.put<IReview>(`http://localhost:3000/api/review/${id}`, reviewData);
   }
 }

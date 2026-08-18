@@ -15,13 +15,13 @@ export class ReviewController {
     }
 
     @Get(':serviceId')
-    async findAllForService(@Param('serviceId') serviceId: number) {
+    async findAllReviewsForService (@Param('serviceId') serviceId: number) {
         const service = await GivingService.findByPk(serviceId);
         if (!service) {
             throw new NotFoundException('Услугата не постои.');
         }
 
-        return await this.reviewService.findAllForService(serviceId)
+        return await this.reviewService.findAllReviewsForService(serviceId)
     }
 
     @Get('my-review/:serviceId')

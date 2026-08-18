@@ -7,6 +7,5 @@ export interface IUser extends DbModel {
     email: string;
     password: string;
     isEmailVerified?: boolean;
-    phone: string;
     reviews?: IReview[];
 }

@@ -6,14 +6,23 @@
         <h3 class="text-base font-semibold text-gray-900">Рецензии ({{ reviews.length }})</h3>
         @if (calculateAverage(reviews) > 0) {
         <p class="text-sm text-gray-500" >
-          Просечна оценка: <span class="font-medium text-amber-600">⭐ {{ calculateAverage(reviews) }} / 5</span>
+          Просечна оценка:
+          <span class="font-medium text-amber-600"> ⭐{{ calculateAverage(reviews) }}/5 </span>
         </p>
         }
       </div>
-      <button (click)="openReviewModal()"
-              class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition shadow-sm">
-        ⭐ Оцени ја услугата
-      </button>
+      @let myReview = myReview$ | async;
+      @if (myReview) {
+        <button (click)="openReviewModal(myReview)"
+                class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition shadow-sm">
+          ⭐ Измени ја рецензијата
+        </button>
+      } @else {
+        <button (click)="openReviewModal()"
+                class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition shadow-sm">
+          ⭐ Оцени ја услугата
+        </button>
+      }
     </div>
 
     @if (reviews.length === 0) {

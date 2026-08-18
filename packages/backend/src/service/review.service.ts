@@ -10,7 +10,7 @@ export class ReviewService {
     async create(reviewData: IReview, user_id: number) {
         reviewData.userId = user_id;
         const existingReview = await Review.findOne({
-            where: { userId: user_id, serviceId: reviewData.serviceId }
+            where: {userId: user_id, serviceId: reviewData.serviceId}
         });
         if (existingReview) {
             return await this.update(existingReview.id, reviewData);
@@ -20,15 +20,7 @@ export class ReviewService {
 
     async findOneByPk(id: number) {
         const review = await Review.findByPk(id, {
-            include: [
-                {
-                    model: User,
-                    attributes: ['id', 'firstName', 'lastName']
-                },
-                {
-                    model: GivingService
-                }
-            ]
+            include: [User, GivingService]
         });
 
         if (!review) {
@@ -38,17 +30,16 @@ export class ReviewService {
         return review;
     }
 
-    async findAllForService(serviceId: number) {
+    async findAllReviewsForService (serviceId: number) {
         const service = await GivingService.findByPk(serviceId);
         if (!service) {
             throw new NotFoundException('Услугата не постои.');
         }
 
         return await Review.findAll({
-            where: {serviceId},
+            where: {serviceId:serviceId},
             include: [{
                 model: User,
-                attributes: ['id', 'firstName', 'lastName']
             }],
             order: [['createdAt', 'DESC']]
         });
@@ -69,7 +60,7 @@ export class ReviewService {
 
     async findUserReviewForService(serviceId: number, userId: number) {
         return await Review.findOne({
-            where: { serviceId, userId }
+            where: {serviceId:serviceId, userId:userId}
         });
     }
 

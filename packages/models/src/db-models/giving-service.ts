@@ -16,13 +16,6 @@ import Review from "./review";
 @Table({ tableName: 'giving_service', timestamps: true })
 export default class GivingService extends Model<IGivingService>{
 
-    @ForeignKey(() => User)
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false,
-    })
-    declare providerId: number;
-
     @Column({
         type: DataType.STRING,
         allowNull: false,
@@ -97,6 +90,13 @@ export default class GivingService extends Model<IGivingService>{
         allowNull: false,
     })
     declare updatedAt: Date;
+
+    @ForeignKey(() => User)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+    })
+    declare providerId: number;
 
     @BelongsTo(() => User)
     declare provider: User;
