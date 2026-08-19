@@ -37,7 +37,7 @@ export class ReviewComponent implements OnInit {
   hoveredRating: number = 0;
 
   reviewForm: FormGroup = this.fb.group({
-    rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
+    rating: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
     description: ['', Validators.maxLength(512)]
   });
 
@@ -86,7 +86,7 @@ export class ReviewComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.currentReviewId = null;
-      this.reviewForm.reset({ rating: 5, description: '' });
+      this.reviewForm.reset({ rating: 1, description: '' });
     }
     this.isReviewModalOpen = true;
   }
@@ -95,7 +95,7 @@ export class ReviewComponent implements OnInit {
     this.isReviewModalOpen = false;
     this.isEditMode = false;
     this.currentReviewId = null;
-    this.reviewForm.reset({ rating: 5, description: '' });
+    this.reviewForm.reset({ rating: 1, description: '' });
   }
 
   submitReview() {
