@@ -15,15 +15,23 @@ export class ApiService {
     return this.http.post<any>('http://localhost:3000/api/auth/login', {email, password})
   }
 
+  logout(refreshToken: string) {
+    return this.http.post('http://localhost:3000/api/auth/logout', { refreshToken });
+  }
+
   getCurrentUser() {
     return this.http.get<IUser>('http://localhost:3000/api/users/current-user');
+  }
+
+  refreshToken(refreshToken: string) {
+    return this.http.post<any>('http://localhost:3000/api/auth/token', { refreshToken });
   }
 
   getAllGivingServices(filters?: {
     search?: string;
     category?: string;
     location?: string
-  }): Observable<IGivingService[]> {
+  }){
     let params = new HttpParams();
 
     if (filters?.search) params = params.set('search', filters.search);
@@ -33,23 +41,23 @@ export class ApiService {
     return this.http.get<IGivingService[]>('http://localhost:3000/api/giving-services', {params});
   }
 
-  create(serviceData: IGivingService): Observable<IGivingService> {
+  create(serviceData: IGivingService) {
     return this.http.post<IGivingService>('http://localhost:3000/api/giving-services', serviceData);
   }
 
-  findOne(id: number | string): Observable<IGivingService> {
+  findOne(id: number | string) {
     return this.http.get<IGivingService>(`http://localhost:3000/api/giving-services/${id}`);
   }
 
-  getReviewsForService(serviceId: number): Observable<IReview[]> {
+  getReviewsForService(serviceId: number) {
     return this.http.get<IReview[]>(`http://localhost:3000/api/review/${serviceId}`);
   }
 
-  createReview(reviewData: IReview): Observable<IReview> {
+  createReview(reviewData: IReview) {
     return this.http.post<IReview>('http://localhost:3000/api/review/', reviewData);
   }
 
-  deleteReview(id: number): Observable<any> {
+  deleteReview(id: number) {
     return this.http.delete(`http://localhost:3000/api/review/${id}`);
   }
 
@@ -57,7 +65,7 @@ export class ApiService {
     return this.http.get<IReview>(`http://localhost:3000/api/review/my-review/${serviceId}`);
   }
 
-  updateReview(id: number, reviewData: IReview): Observable<IReview> {
+  updateReview(id: number, reviewData: IReview) {
     return this.http.put<IReview>(`http://localhost:3000/api/review/${id}`, reviewData);
   }
 }
