@@ -1,16 +1,20 @@
-import {BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, Table, UpdatedAt} from "sequelize-typescript";
+import {
+    BelongsTo,
+    Column,
+    CreatedAt,
+    DataType,
+    ForeignKey,
+    HasMany,
+    Model,
+    Table,
+    UpdatedAt
+} from "sequelize-typescript";
 import User from "./user";
 import {IGivingService, Location, PriceUnit, ServiceCategory} from "../../../shared/models";
+import Review from "./review";
 
 @Table({ tableName: 'giving_service', timestamps: true })
 export default class GivingService extends Model<IGivingService>{
-
-    @ForeignKey(() => User)
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false,
-    })
-    declare providerId: number;
 
     @Column({
         type: DataType.STRING,
@@ -73,9 +77,6 @@ export default class GivingService extends Model<IGivingService>{
     })
     declare availability: string;
 
-    @BelongsTo(() => User)
-    declare provider: User;
-
     @CreatedAt
     @Column({
         type: DataType.DATE,
@@ -89,4 +90,18 @@ export default class GivingService extends Model<IGivingService>{
         allowNull: false,
     })
     declare updatedAt: Date;
+
+    @ForeignKey(() => User)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false,
+    })
+    declare providerId: number;
+
+    @BelongsTo(() => User)
+    declare provider: User;
+
+    @HasMany(() => Review)
+    declare reviews: Review[];
+
 }

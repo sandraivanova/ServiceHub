@@ -1,5 +1,5 @@
 import {Injectable, NotFoundException} from "@nestjs/common";
-import GivingService from "../../../models/src/db-models/giving.service";
+import GivingService from "../../../models/src/db-models/giving-service";
 import {IGivingService} from "../../../shared/models";
 import {Op} from "sequelize";
 import {User} from "../../../models";

@@ -1,4 +1,6 @@
 import {DbModel} from "./db.model";
+import {IUser} from "./user";
+import {IReview} from "./review";
 
 export interface IGivingService extends DbModel {
     providerId: number;
@@ -12,6 +14,10 @@ export interface IGivingService extends DbModel {
     imageUrl?: string;
     phone: string;
     availability?: string;
+    reviews: IReview[]
+
+    //AUTO GENERATED
+    provider: IUser;
 }
 
 export enum PriceUnit {

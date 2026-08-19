@@ -1,0 +1,10 @@
+{
+  "name": "dnevnica",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "postinstall": "npm run build --workspace=packages/models"
+  }
+}

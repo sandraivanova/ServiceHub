@@ -1,4 +1,5 @@
 import {DbModel} from "./db.model";
+import {IReview} from "./review";
 
 export interface IUser extends DbModel {
     firstName: string;
@@ -6,4 +7,5 @@ export interface IUser extends DbModel {
     email: string;
     password: string;
     isEmailVerified?: boolean;
+    reviews?: IReview[];
 }

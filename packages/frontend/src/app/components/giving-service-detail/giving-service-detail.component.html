@@ -57,24 +57,24 @@
           <div class="space-y-1">
             <span class="text-xs text-blue-700/70 uppercase tracking-wider font-semibold">Име и презиме</span>
             <p class="text-gray-900 font-medium text-base">
-              {{ service.provider?.firstName }} {{ service.provider?.lastName }}
+              {{ service.provider.firstName }} {{ service.provider.lastName }}
             </p>
           </div>
 
           <div class="space-y-1">
             <span class="text-xs text-blue-700/70 uppercase tracking-wider font-semibold">Телефон</span>
             <p class="text-blue-600 font-medium text-base">
-              <a href="tel:{{ service.phone || service.provider?.phone }}" class="hover:underline">
-                {{ service.phone || service.provider?.phone || 'Нема телефон' }}
+              <a href="tel:{{ service.phone }}" class="hover:underline">
+                {{ service.phone || 'Нема телефон' }}
               </a>
             </p>
           </div>
 
           <div class="space-y-1">
             <span class="text-xs text-blue-700/70 uppercase tracking-wider font-semibold">Рејтинг</span>
-            <p class="text-gray-800 font-medium">
-              ⭐ Нема оценки
-            </p>
+
+            <app-review [serviceId]="service.id!"></app-review>
+
           </div>
         </div>
       </div>

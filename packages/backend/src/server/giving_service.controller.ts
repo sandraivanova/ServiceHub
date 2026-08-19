@@ -16,11 +16,11 @@ export class GivingServicesController {
 
     @Get()
     async findAll(
-        @Query('search') search?: string,
+        @Query('search') title?: string,
         @Query('category') category?: string,
         @Query('location') location?: string,
     ) {
-        return await this.givingServicesService.findAll({search, category, location});
+        return await this.givingServicesService.findAll({title, category, location});
     }
 
     @Get(':id')

@@ -1,0 +1,160 @@
+@if (reviews$ | async; as reviews) {
+  <div class="space-y-6 pt-6 border-t border-blue-100/60" (click)="activeMenuReviewId = null">
+
+    <!-- Хедер секција -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-base font-semibold text-gray-900">Рецензии ({{ reviews.length }})</h3>
+        @if (calculateAverage(reviews) > 0) {
+          <p class="text-sm text-gray-500">
+            Просечна оценка:
+            <span class="font-medium text-amber-600">⭐ {{ calculateAverage(reviews) }} / 5</span>
+          </p>
+        }
+      </div>
+
+      @let myReview = myReview$ | async;
+      @if (!myReview) {
+        <button (click)="openReviewModal()"
+                class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition shadow-sm">
+          ⭐ Оцени ја услугата
+        </button>
+      }
+    </div>
+
+    @if (reviews.length === 0) {
+      <p class="text-sm text-gray-500">Сè уште нема напишано рецензии за оваа услуга. Бидете први што ќе ја оценаат!</p>
+    } @else {
+      <div class="space-y-4">
+        @for (review of reviews; track review.id) {
+          <div class="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm space-y-2 relative hover:border-gray-200 transition">
+
+            <div class="flex justify-between items-center">
+              <span class="font-semibold text-sm text-gray-900">
+                {{ review.user.firstName }} {{ review.user.lastName }}
+              </span>
+              <span class="text-sm font-medium text-amber-600">⭐ {{ review.rating }}/5</span>
+            </div>
+
+            <p class="text-sm text-gray-600 leading-relaxed">{{ review.description }}</p>
+
+            <div class="flex justify-between items-center pt-1">
+              <span class="text-xs text-gray-400">{{ review.created_at | date:'short' }}</span>
+
+              @if (myReview && myReview.id === review.id) {
+                <div class="relative">
+                  <button (click)="toggleMenu(review.id!, $event)"
+                          class="text-gray-400 hover:text-gray-600 px-2 py-1 rounded-lg text-lg font-bold transition focus:outline-none">
+                    &#8942;
+                  </button>
+
+                  @if (activeMenuReviewId === review.id) {
+                    <div class="absolute right-0 mt-1 w-36 bg-white border border-gray-100 rounded-xl shadow-lg z-20 py-1 overflow-hidden">
+                      <button (click)="openReviewModal(review)"
+                              class="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 font-medium flex items-center gap-1.5">
+                        ✏️ Измени
+                      </button>
+                      <button (click)="openDeleteModal(review.id!)"
+                              class="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 font-medium flex items-center gap-1.5">
+                        🗑️ Избриши
+                      </button>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+
+    @if (isReviewModalOpen) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+           (click)="closeReviewModal()">
+
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden p-6 space-y-4 relative"
+             (click)="$event.stopPropagation()">
+
+          <div class="flex justify-between items-center border-b pb-3">
+            <h3 class="text-lg font-bold text-gray-900">
+              {{ isEditMode ? 'Измени ја рецензијата' : 'Оцени ја услугата' }}
+            </h3>
+            <button (click)="closeReviewModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+          </div>
+
+          <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">Рејтинг (1-5)</label>
+
+              <div class="flex items-center gap-1 cursor-pointer">
+                @for (star of [1, 2, 3, 4, 5]; track star) {
+                  <span
+                    class="text-3xl transition-colors duration-150"
+                    [class.text-amber-400]="star <= (hoveredRating || reviewForm.get('rating')?.value)"
+                    [class.text-gray-300]="star > (hoveredRating || reviewForm.get('rating')?.value)"
+                    (mouseenter)="hoveredRating = star"
+                    (mouseleave)="hoveredRating = 0"
+                    (click)="setRating(star)">
+                    ★
+                  </span>
+                }
+              </div>
+              <input type="hidden" formControlName="rating">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Коментар</label>
+              <textarea formControlName="description" rows="3" placeholder="Споделете го вашето искуство..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 text-sm resize-none"></textarea>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-3 border-t">
+              <button type="button" (click)="closeReviewModal()"
+                      class="px-4 py-2 border border-gray-300 rounded-xl text-gray-700 text-sm font-medium">
+                Откажи
+              </button>
+              <button type="submit" [disabled]="reviewForm.invalid"
+                      class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition disabled:opacity-50">
+                {{ isEditMode ? 'Зачувај промени' : 'Испрати' }}
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    }
+
+    @if (isDeleteModalOpen) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+           (click)="closeDeleteModal()">
+
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden p-6 space-y-4 relative text-center"
+             (click)="$event.stopPropagation()">
+
+          <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+            🗑️
+          </div>
+
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">Избриши рецензија</h3>
+            <p class="text-sm text-gray-500 mt-1">Дали сте сигурни дека сакате да ја избришете оваа рецензија? Оваа акција не може да се врати.</p>
+          </div>
+
+          <div class="flex justify-center gap-3 pt-4 border-t">
+            <button type="button" (click)="closeDeleteModal()"
+                    class="px-4 py-2 border border-gray-300 rounded-xl text-gray-700 text-sm font-medium hover:bg-gray-50 transition">
+              Откажи
+            </button>
+            <button type="button" (click)="confirmDelete()"
+                    class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-medium transition shadow-sm">
+              Да, избриши
+            </button>
+          </div>
+
+        </div>
+      </div>
+    }
+
+  </div>
+}
