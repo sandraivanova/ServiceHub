@@ -1,56 +1,49 @@
 @if (service$ | async; as service) {
-  <div class="max-w-4xl mx-auto p-4 md:p-6 space-y-5 min-h-screen bg-slate-50/50">
+  <div class="service-container">
 
-    <div class="relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-6 text-white shadow-lg shadow-blue-500/10">
-      <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-
-      <div class="relative z-10 space-y-3">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+    <div class="banner-card">
+      <div class="banner-glow"></div>
+      <div class="banner-content">
+        <div class="banner-header">
+          <span class="category-badge">
             {{ categoryLabels[service.category] }}
           </span>
-          <div class="flex items-center gap-1.5 text-blue-100 bg-black/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium border border-white/10">
+          <div class="location-badge">
             <span>📍</span> Локација: <span class="text-white font-semibold">{{ locationLabels[service.location] }}</span>
           </div>
         </div>
 
-        <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white">
+        <h1 class="banner-title">
           {{ service.title }}
         </h1>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
-        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base font-bold shrink-0">
-          💶
-        </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">💶</div>
         <div>
-          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Цена</span>
-          <div class="text-base font-bold text-slate-900">
+          <span class="stat-label">Цена</span>
+          <div class="stat-value">
             {{ service.price }}€ <span class="text-xs font-normal text-slate-500">/ {{ priceUnitLabels[service.priceUnit] }}</span>
           </div>
         </div>
       </div>
 
-      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
-        <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-base font-bold shrink-0">
-          ⚡
-        </div>
+      <div class="stat-card">
+        <div class="stat-icon indigo">⚡</div>
         <div>
-          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Искуство</span>
-          <div class="text-base font-bold text-slate-900">
+          <span class="stat-label">Искуство</span>
+          <div class="stat-value">
             {{ service.yearsOfExperience ? service.yearsOfExperience + ' год.' : 'Не е наведено' }}
           </div>
         </div>
       </div>
 
-      <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3.5">
-        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base font-bold shrink-0">
-          🕒
-        </div>
+      <div class="stat-card">
+        <div class="stat-icon emerald">🕒</div>
         <div>
-          <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Достапност</span>
+          <span class="stat-label">Достапност</span>
           <div class="text-sm font-bold text-slate-900 truncate max-w-[150px]">
             {{ service.availability || 'Флексибилно' }}
           </div>
@@ -58,27 +51,27 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-2.5">
-      <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+    <div class="content-card">
+      <h3 class="section-title">
         <span>📄</span> Опис на услугата
       </h3>
-      <p class="text-slate-600 leading-relaxed whitespace-pre-line text-sm font-normal">
+      <p class="section-text">
         {{ service.description }}
       </p>
     </div>
 
-    <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-5">
-      <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+    <div class="provider-section">
+      <h3 class="section-title">
         <span>👤</span> Информации за провајдерот
       </h3>
 
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200/60">
-        <div class="flex items-center gap-3.5">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
+      <div class="provider-box">
+        <div class="provider-info">
+          <div class="provider-avatar">
             {{ service.provider.firstName.charAt(0) }}{{ service.provider.lastName.charAt(0) }}
           </div>
           <div>
-            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Провајдер</span>
+            <span class="stat-label">Провајдер</span>
             <h4 class="text-sm font-bold text-slate-900">
               {{ service.provider.firstName }} {{ service.provider.lastName }}
             </h4>
@@ -86,8 +79,7 @@
         </div>
 
         <div>
-          <a href="tel:{{ service.phone }}"
-             class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition shadow-sm">
+          <a href="tel:{{ service.phone }}" class="call-btn">
             <span>📞</span> {{ service.phone || 'Нема телефон' }}
           </a>
         </div>
@@ -100,8 +92,8 @@
 
   </div>
 } @else {
-  <div class="flex flex-col items-center justify-center py-32 space-y-3">
-    <div class="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-    <div class="text-slate-500 text-sm font-medium">Се вчитуваат деталите...</div>
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <div class="loading-text">Се вчитуваат деталите...</div>
   </div>
 }
