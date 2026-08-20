@@ -1,0 +1,135 @@
+.page-container {
+  @apply max-w-7xl mx-auto p-6 space-y-6 bg-slate-50/50 min-h-screen;
+}
+
+.header-card {
+  @apply flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100;
+}
+
+.header-title {
+  @apply text-2xl md:text-3xl font-bold text-slate-900 tracking-tight;
+}
+
+.header-subtitle {
+  @apply text-sm text-slate-500 mt-1;
+}
+
+.primary-btn {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-3.5 rounded-2xl transition-all duration-200 shadow-lg shadow-blue-600/20 flex items-center gap-2;
+}
+
+.modal-backdrop {
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm;
+}
+
+.modal-box {
+  @apply bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all border border-slate-100;
+}
+
+.modal-header {
+  @apply flex justify-between items-center px-6 py-5 border-b border-slate-100 bg-slate-50/50;
+
+  h2 {
+    @apply text-xl font-bold text-slate-900;
+  }
+}
+
+.close-btn {
+  @apply text-slate-400 hover:text-slate-600 text-2xl font-bold focus:outline-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-200/50 transition;
+}
+
+.modal-form {
+  @apply p-6 md:p-8 space-y-4 max-h-[80vh] overflow-y-auto;
+}
+
+.form-group {
+  @apply space-y-1.5;
+}
+
+.form-label {
+  @apply block text-xs font-semibold text-slate-500 uppercase tracking-wide;
+}
+
+.form-input, .form-select, .form-textarea {
+  @apply w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-2xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 focus:outline-none text-sm transition;
+}
+
+.form-select {
+  @apply cursor-pointer;
+}
+
+.form-actions {
+  @apply flex justify-end gap-3 pt-4 border-t border-slate-100;
+}
+
+.cancel-btn {
+  @apply px-5 py-3 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-medium text-sm transition;
+}
+
+.submit-btn {
+  @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-2xl text-sm transition duration-200 shadow-lg shadow-blue-600/20;
+}
+
+.services-section {
+  @apply space-y-4;
+}
+
+.section-header {
+  @apply flex items-center justify-between px-1;
+
+  h3 {
+    @apply text-xl font-bold text-slate-900 tracking-tight;
+  }
+}
+
+.services-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+}
+
+.service-card {
+  @apply bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between;
+}
+
+.badge {
+  @apply text-xs bg-blue-50 text-blue-700 border border-blue-200/60 px-3.5 py-1.5 rounded-full font-semibold tracking-wide;
+}
+
+.service-title {
+  @apply text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1 mt-4;
+}
+
+.service-desc {
+  @apply text-sm text-slate-500 mt-2 line-clamp-2 leading-relaxed;
+}
+
+.location-box {
+  @apply mt-4 pt-4 border-t border-slate-100 flex items-center gap-2 text-sm text-slate-600;
+}
+
+.footer-box {
+  @apply mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-4;
+}
+
+.price {
+  @apply text-xl font-extrabold text-slate-900;
+}
+
+.unit {
+  @apply text-xs font-medium text-slate-400 block;
+}
+
+.view-btn {
+  @apply px-5 py-3 bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white border border-blue-100 hover:border-transparent font-semibold rounded-2xl text-xs tracking-wide transition-all duration-200 shadow-sm flex items-center justify-center;
+}
+
+.loading-container {
+  @apply flex flex-col items-center justify-center py-32 space-y-3;
+
+  .spinner {
+    @apply w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin;
+  }
+
+  .loading-text {
+    @apply text-slate-500 text-sm font-medium;
+  }
+}
