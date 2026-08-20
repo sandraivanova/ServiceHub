@@ -1,6 +1,19 @@
 @if (service$ | async; as service) {
   <div class="service-container">
 
+    @if (currentUser$ | async; as currentUser) {
+      @if (currentUser.id === service.provider.id) {
+        <div class="provider-actions">
+          <button (click)="openEditModal(service)" class="edit-btn">
+            ✏️ Уреди оглас
+          </button>
+          <button (click)="openDeleteModal()" class="delete-btn-action">
+            🗑️ Избриши оглас
+          </button>
+        </div>
+      }
+    }
+
     <div class="banner-card">
       <div class="banner-glow"></div>
       <div class="banner-content">
@@ -44,7 +57,7 @@
         <div class="stat-icon emerald">🕒</div>
         <div>
           <span class="stat-label">Достапност</span>
-          <div class="text-sm font-bold text-slate-900 truncate max-w-[150px]">
+          <div class="stat-availability">
             {{ service.availability || 'Флексибилно' }}
           </div>
         </div>
@@ -72,7 +85,7 @@
           </div>
           <div>
             <span class="stat-label">Провајдер</span>
-            <h4 class="text-sm font-bold text-slate-900">
+            <h4 class="provider-name">
               {{ service.provider.firstName }} {{ service.provider.lastName }}
             </h4>
           </div>
@@ -91,6 +104,110 @@
     </div>
 
   </div>
+
+  @if (isDeleteModalOpen) {
+    <div class="modal-backdrop" (click)="closeDeleteModal()">
+      <div class="modal-box delete-modal-content" (click)="$event.stopPropagation()">
+        <div class="delete-icon-wrapper">
+          🗑️
+        </div>
+
+        <div>
+          <h3 class="modal-main-title">Избриши услуга</h3>
+          <p class="modal-subtitle">Дали сте сигурни дека сакате да го избришете овој оглас? Оваа акција не може да се врати.</p>
+        </div>
+
+        <div class="modal-actions-footer">
+          <button type="button" (click)="closeDeleteModal()" class="btn-secondary">
+            Откажи
+          </button>
+          <button type="button" (click)="confirmDelete()" class="btn-danger">
+            Да, избриши
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (isEditModalOpen) {
+    <div class="modal-backdrop">
+      <div class="modal-box edit-modal-box">
+        <div class="modal-header">
+          <h2>Уреди ја услугата</h2>
+          <button (click)="closeEditModal()" class="close-btn">&times;</button>
+        </div>
+
+        <form [formGroup]="serviceForm" (submit)="updateService()" class="modal-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Наслов</label>
+              <input type="text" formControlName="title" required class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Цена од (€)</label>
+              <input type="number" formControlName="price" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Единица за цена</label>
+              <select formControlName="priceUnit" class="form-input form-select">
+                @for (unit of priceUnits; track unit) {
+                  <option [value]="unit">{{ priceUnitLabels[unit] }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Категорија</label>
+              <select formControlName="category" class="form-input form-select">
+                @for (cat of categories; track cat) {
+                  <option [value]="cat">{{ categoryLabels[cat] }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Години искуство</label>
+              <input type="number" formControlName="yearsOfExperience" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Достапност</label>
+              <input type="text" formControlName="availability" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Телефон за контакт</label>
+              <input type="text" formControlName="phone" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Локација</label>
+              <select formControlName="location" class="form-input form-select">
+                @for (loc of locations; track loc) {
+                  <option [value]="loc">{{ locationLabels[loc] }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Опис</label>
+            <textarea formControlName="description" required rows="3" class="form-input form-textarea"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" (click)="closeEditModal()" class="cancel-btn">Откажи</button>
+            <button type="submit" class="submit-btn">Ажурирај услуга</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
 } @else {
   <div class="loading-container">
     <div class="spinner"></div>
