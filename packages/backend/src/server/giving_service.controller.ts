@@ -1,6 +1,7 @@
-import {Controller, Get, Post, Body, Param, Put, Delete, Query} from '@nestjs/common';
+import {Controller, Get, Post, Body, Param, Put, Delete, Query, UseGuards} from '@nestjs/common';
 import {GivingServicesService} from '../service/giving.service';
 import {CurrentProfile} from "../middleware/decorators/currentProfile.decorator";
+import {JwtAuthGuard} from "../middleware/guards/jwt-auth.guard";
 import {User} from "../../../models";
 import {IGivingService} from "../../../shared/models";
 
@@ -10,6 +11,7 @@ export class GivingServicesController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     async create(@Body() body: IGivingService, @CurrentProfile() user: User) {
         return await this.givingServicesService.create(body, user.id);
     }

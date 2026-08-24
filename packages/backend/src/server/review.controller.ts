@@ -1,6 +1,7 @@
-import {Body, Controller, Delete, Get, NotFoundException, Param, Post, Put} from "@nestjs/common";
+import {Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, UseGuards} from "@nestjs/common";
 import {ReviewService} from "../service/review.service";
 import {CurrentProfile} from "../middleware/decorators/currentProfile.decorator";
+import {JwtAuthGuard} from "../middleware/guards/jwt-auth.guard";
 import {GivingService, User} from "../../../models";
 import {IReview} from "../../../shared/models";
 
@@ -10,6 +11,7 @@ export class ReviewController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     async create(@Body() body: IReview, @CurrentProfile() user: User) {
         return await this.reviewService.create(body, user.id);
     }
@@ -25,6 +27,7 @@ export class ReviewController {
     }
 
     @Get('my-review/:serviceId')
+    @UseGuards(JwtAuthGuard)
     async getMyReview(
         @Param('serviceId') serviceId: number,
         @CurrentProfile() user: User
