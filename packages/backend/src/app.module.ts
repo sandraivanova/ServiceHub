@@ -14,6 +14,12 @@ import {GivingServicesController} from "./server/giving_service.controller";
 import {GivingServicesService} from "./service/giving.service";
 import {ReviewController} from "./server/review.controller";
 import {ReviewService} from "./service/review.service";
+import Redis from 'ioredis';
+import {getRedisConnection} from "./utils/redis.utils";
+import {BullModule} from "@nestjs/bullmq";
+import {WelcomeEmail} from "./bullmq/queues/welcome.email.processor";
+import {EmailProcessor} from "./bullmq/queues/EmailConfirmationProcessor";
+import {EmailConfirmationService} from "./bullmq/queues/EmailConfirmationService";
 
 const CONTROLLERS = [
     AppController,
@@ -29,7 +35,7 @@ const MODELS = [
     Review
 ]
 
-const SERVICES=[
+const SERVICES = [
     AppService,
     UsersService,
     AuthService,
@@ -43,6 +49,20 @@ const SERVICES=[
             isGlobal: true,
             envFilePath: '.env'
         }),
+
+        BullModule.forRoot({
+            connection: getRedisConnection(),
+        }),
+
+        BullModule.registerQueue(
+            {
+                name: 'email-queue',
+            },
+            {
+                name: 'confirmation-queue',
+            }
+        ),
+
         SequelizeModule.forRoot({
             dialect: 'mysql',
             host: process.env.DB_HOST,
@@ -61,7 +81,23 @@ const SERVICES=[
         }),
     ],
     controllers: [...CONTROLLERS],
-    providers: [...SERVICES],
+    providers: [...SERVICES, WelcomeEmail,EmailProcessor, EmailConfirmationService, {
+        provide: 'REDIS_CLIENT',
+        useFactory: () => {
+            const redisConfig = getRedisConnection();
+            const client = new Redis(redisConfig);
+
+            client.on('connect', () => {
+                console.log('Successfully connected to Redis via ioredis!');
+            });
+
+            client.on('error', (err) => {
+                console.error('Redis connection error:', err);
+            });
+
+            return client;
+        },
+    }],
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
