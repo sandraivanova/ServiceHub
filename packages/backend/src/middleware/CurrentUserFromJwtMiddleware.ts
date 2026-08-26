@@ -29,7 +29,7 @@ export class CurrentUserFromJwtMiddleware implements NestMiddleware {
     }
 
     protected getBearerToken(req: Request): string | undefined {
-        console.log(req.headers.authorization)
+        // console.log(req.headers.authorization)
         const authorization = req.headers.authorization;
 
         if (!authorization?.startsWith('Bearer ')) {

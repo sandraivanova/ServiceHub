@@ -1,7 +1,8 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from "@nestjs/common";
 import {UsersService} from "../service/user.service";
 import {IUser} from "../../../shared/models";
 import {CurrentProfile} from "../middleware/decorators/currentProfile.decorator";
+import {JwtAuthGuard} from "../middleware/guards/jwt-auth.guard";
 import {User} from "../../../models";
 
 
@@ -11,6 +12,7 @@ export class UserController {
     }
 
     @Get('current-user')
+    @UseGuards(JwtAuthGuard)
     async getCurrentUser(@CurrentProfile() user: User) {
         return user;
     }

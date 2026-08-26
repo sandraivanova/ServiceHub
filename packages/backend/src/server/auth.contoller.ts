@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import {Request} from 'express';
 import {encryptPassword} from "../../../webhooks/utils/encrypt-password.utils";
 import {UsersService} from "../service/user.service";
-import {IUser} from "../../../shared/models/user"
+import {IUser} from "@dnevnica/shared/models"
 
 const JWT_SECRET = process.env.JWT_SECRET || 'access-secret-key';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh-secret-key';
@@ -66,8 +66,8 @@ export class AuthController {
         }
 
         try {
-            const decoded: any = jwt.verify(refreshToken, REFRESH_SECRET);
-            const user = await this.userService.findByEmail(decoded);
+            const decoded: any = jwt.verify(refreshToken, REFRESH_SECRET) ;
+            const user = await this.userService.findByEmail(decoded.email);
 
             if (!user) {
                 throw new UnauthorizedException();

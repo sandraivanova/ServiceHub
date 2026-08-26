@@ -24,9 +24,29 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    if (refreshToken) {
+      this.apiService.logout(refreshToken).subscribe({
+        next: () => {
+          this.performCleanUp();
+        },
+        error: () => {
+          this.performCleanUp();
+        }
+      });
+    } else {
+      this.performCleanUp();
+    }
+  }
+
+  private performCleanUp() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     this.isLoggedIn = false;
-    this.router.navigate(['/home']);
+
+    this.router.navigate(['/home']).then(() => {
+      window.location.reload();
+    });
   }
 }
