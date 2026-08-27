@@ -13,7 +13,7 @@ import {Request} from 'express';
 import {encryptPassword} from "../../../webhooks/utils/encrypt-password.utils";
 import {UsersService} from "../service/user.service";
 import {IUser} from "@dnevnica/shared/models"
-import {EmailConfirmationService} from "../bullmq/queues/EmailConfirmationService";
+import {EmailService} from "../bullmq/queues/EmailService";
 
 const JWT_SECRET = process.env.JWT_SECRET || 'access-secret-key';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh-secret-key';
@@ -22,7 +22,7 @@ const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh-secret-key';
 export class AuthController {
 
     constructor(private readonly userService: UsersService,
-                private readonly emailQueueService: EmailConfirmationService
+                private readonly emailService: EmailService
     ) {
     }
 
@@ -121,7 +121,7 @@ export class AuthController {
             {expiresIn: '1d'}
         );
 
-        await this.emailQueueService.sendConfirmationEmail(
+        await this.emailService.sendConfirmationEmail(
             newUser.email,
             newUser.firstName,
             verificationToken

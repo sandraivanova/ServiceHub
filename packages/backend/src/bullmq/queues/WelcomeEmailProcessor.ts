@@ -2,10 +2,10 @@ import {Processor, WorkerHost} from '@nestjs/bullmq';
 import {Job} from 'bullmq';
 import {mailTransporter} from '../../config/email';
 
-@Processor('confirmation-queue')
-export class ConfirmationEmail extends WorkerHost {
+@Processor('welcome-queue')
+export class WelcomeEmail extends WorkerHost {
 
-  private transporter = mailTransporter;
+    private transporter = mailTransporter;
 
     async process(job: Job<any, any, string>): Promise<any> {
         console.log(
@@ -13,7 +13,7 @@ export class ConfirmationEmail extends WorkerHost {
         );
 
         switch (job.name) {
-            case 'send-confirmation-email':
+            case 'send-welcome-email':
                 await this.sendEmail(job.data);
                 break;
 
@@ -38,12 +38,11 @@ export class ConfirmationEmail extends WorkerHost {
         template: string;
         context: {
             name: string;
-            confirmationUrl: string;
         };
     }) {
         try {
             console.log(
-                `[Email Service] Sending confirmation email to: ${data.to}...`,
+                `[Email Service] Sending email to: ${data.to}...`,
             );
 
             const info = await this.transporter.sendMail({
@@ -55,11 +54,11 @@ export class ConfirmationEmail extends WorkerHost {
             } as any);
 
             console.log(
-                `[Email Service] Confirmation email sent successfully: ${info.messageId}`,
+                `[Email Service] Email sent successfully: ${info.messageId}`,
             );
         } catch (error) {
             console.error(
-                `[Email Service] Failed to send confirmation email:`,
+                `[Email Service] Failed to send email:`,
                 error,
             );
 
