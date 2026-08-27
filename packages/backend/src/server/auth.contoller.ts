@@ -1,9 +1,19 @@
-import {BadRequestException, Body, Controller, HttpCode, Post, Req, UnauthorizedException,} from '@nestjs/common';
+import {
+    BadRequestException,
+    Body,
+    Controller, Get,
+    HttpCode,
+    NotFoundException,
+    Post,
+    Req,
+    UnauthorizedException,
+} from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import {Request} from 'express';
 import {encryptPassword} from "../../../webhooks/utils/encrypt-password.utils";
 import {UsersService} from "../service/user.service";
 import {IUser} from "@dnevnica/shared/models"
+import {EmailConfirmationService} from "../bullmq/queues/EmailConfirmationService";
 
 const JWT_SECRET = process.env.JWT_SECRET || 'access-secret-key';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh-secret-key';
@@ -11,12 +21,14 @@ const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh-secret-key';
 @Controller('auth')
 export class AuthController {
 
-    constructor(private readonly userService: UsersService) {
+    constructor(private readonly userService: UsersService,
+                private readonly emailQueueService: EmailConfirmationService
+    ) {
     }
 
     @Post('login')
     @HttpCode(200)
-    async login(@Req() req: Request, @Body() body: {email: string, password:string}) {
+    async login(@Req() req: Request, @Body() body: { email: string, password: string }) {
         const {email, password} = body;
 
         if (!email || !password) {
@@ -26,6 +38,10 @@ export class AuthController {
         const user = await this.userService.findByEmail(email);
         if (!user) {
             throw new UnauthorizedException('email/password did not match');
+        }
+
+        if (!user.isEmailVerified) {
+            throw new UnauthorizedException('Please verify your email first');
         }
 
         const hashedPassword = await encryptPassword(password);
@@ -66,7 +82,7 @@ export class AuthController {
         }
 
         try {
-            const decoded: any = jwt.verify(refreshToken, REFRESH_SECRET) ;
+            const decoded: any = jwt.verify(refreshToken, REFRESH_SECRET);
             const user = await this.userService.findByEmail(decoded.email);
 
             if (!user) {
@@ -95,9 +111,50 @@ export class AuthController {
 
         user.password = await encryptPassword(user.password);
 
-        await this.userService.create(user);
+        user.isEmailVerified = false;
 
-        return {message: 'Sign up successful'};
+        const newUser = await this.userService.create(user);
+
+        const verificationToken = jwt.sign(
+            {email: newUser.email, sub: newUser.id},
+            REFRESH_SECRET,
+            {expiresIn: '1d'}
+        );
+
+        await this.emailQueueService.sendConfirmationEmail(
+            newUser.email,
+            newUser.firstName,
+            verificationToken
+        );
+
+        return {message: 'Sign up successful. Please check your email to verify your account.'};
+    }
+
+    @Get('confirm')
+    async confirmEmail(@Req() req: Request) {
+        const token = req.query.token as string;
+        if (!token) {
+            throw new BadRequestException('Missing verification token');
+        }
+
+        try {
+            const decoded: any = jwt.verify(token, REFRESH_SECRET);
+            const user = await this.userService.findByEmail(decoded.email);
+
+            if (!user) {
+                throw new NotFoundException('User not found');
+            }
+
+            if (user.isEmailVerified) {
+                return {message: 'Email is already verified.'};
+            }
+
+            await this.userService.update(user.id, {isEmailVerified: true});
+
+            return {message: 'Email successfully verified! You can now log in.'};
+        } catch (e) {
+            throw new BadRequestException('Invalid or expired verification link.');
+        }
     }
 }
 
