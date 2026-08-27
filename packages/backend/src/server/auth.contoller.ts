@@ -111,10 +111,7 @@ export class AuthController {
 
         user.password = await encryptPassword(user.password);
 
-        // await this.userService.create(user);
-        // return {message: 'Sign up successful'};\
-
-        (user as any).isEmailVerified = false;
+        user.isEmailVerified = false;
 
         const newUser = await this.userService.create(user);
 
@@ -148,11 +145,11 @@ export class AuthController {
                 throw new NotFoundException('User not found');
             }
 
-            if ((user as any).isEmailVerified) {
+            if (user.isEmailVerified) {
                 return {message: 'Email is already verified.'};
             }
 
-            await this.userService.update(user.id, {isEmailVerified: true} as any);
+            await this.userService.update(user.id, {isEmailVerified: true});
 
             return {message: 'Email successfully verified! You can now log in.'};
         } catch (e) {

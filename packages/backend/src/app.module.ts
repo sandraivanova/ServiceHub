@@ -43,6 +43,12 @@ const SERVICES = [
     ReviewService
 ]
 
+const EMAIL_CONFIGS=[
+    WelcomeEmail,
+    EmailProcessor,
+    EmailConfirmationService
+]
+
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -81,7 +87,7 @@ const SERVICES = [
         }),
     ],
     controllers: [...CONTROLLERS],
-    providers: [...SERVICES, WelcomeEmail,EmailProcessor, EmailConfirmationService, {
+    providers: [...SERVICES, ...EMAIL_CONFIGS, {
         provide: 'REDIS_CLIENT',
         useFactory: () => {
             const redisConfig = getRedisConnection();
