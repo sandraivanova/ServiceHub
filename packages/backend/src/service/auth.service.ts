@@ -8,21 +8,21 @@ export class AuthService {
     constructor(private readonly jwtService: JwtService) {}
 
     async validateUser(email: string, pass: string) {
-        const user=await User.findOne({where: {email}});
-        if (!user){
+        const user = await User.findOne({where: {email}});
+        if (!user) {
             return null;
         }
 
-        const hashPassword=await encryptPassword(pass);
-        if (user.password === hashPassword){
-            const { password, ...result } = user.get({ plain: true });
+        const hashPassword = await encryptPassword(pass);
+        if (user.password === hashPassword) {
+            const {password, ...result} = user.get({plain: true});
             return result;
         }
         return null;
     }
 
     async login(user: any) {
-        const payload = { email: user.email, sub: user.id };
+        const payload = {email: user.email, sub: user.id};
 
         const accessToken = this.jwtService.sign(payload, {
             secret: process.env['JWT_ACCESS_SECRET'] || 'access-secret-key',
