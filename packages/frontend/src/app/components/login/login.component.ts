@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {ApiService} from "../../services/api.service";
 
@@ -9,7 +9,7 @@ import {ApiService} from "../../services/api.service";
   selector: 'app-login',
   standalone: true,
   imports: [
-    ReactiveFormsModule, CommonModule
+    ReactiveFormsModule, CommonModule, RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

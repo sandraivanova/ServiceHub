@@ -18,9 +18,10 @@ import Redis from 'ioredis';
 import {getRedisConnection} from "./utils/redis.utils";
 import {BullModule} from "@nestjs/bullmq";
 
-import { EmailService} from "./bullmq/queues/EmailService";
+import {EmailService} from "./bullmq/queues/EmailService";
 import {WelcomeEmail} from "./bullmq/queues/WelcomeEmailProcessor";
 import {ConfirmationEmail} from "./bullmq/queues/EmailConfirmationProcessor";
+import {PasswordResetEmail} from "./bullmq/queues/PasswordResetProcessor";
 
 const CONTROLLERS = [
     AppController,
@@ -44,9 +45,10 @@ const SERVICES = [
     ReviewService
 ]
 
-const EMAIL_CONFIGS=[
+const EMAIL_CONFIGS = [
     WelcomeEmail,
     ConfirmationEmail,
+    PasswordResetEmail,
     EmailService
 ]
 
@@ -67,6 +69,9 @@ const EMAIL_CONFIGS=[
             },
             {
                 name: 'confirmation-queue',
+            },
+            {
+                name: 'password-reset-queue'
             }
         ),
 
