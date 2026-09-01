@@ -70,10 +70,24 @@ export class GivingServicesComponent implements OnInit {
       return;
     }
 
-    this.apiService.create(this.serviceForm.value).subscribe({
+    this.apiService.createService(this.serviceForm.value).subscribe({
       next: (res) => {
         this.services$ = this.apiService.getAllGivingServices();
         this.closeModal()
+
+
+        this.serviceForm.reset({
+          price: 0,
+          priceUnit: PriceUnit.HOUR,
+          category: ServiceCategory.OTHER,
+          yearsOfExperience: 1,
+          location: Location.KOCANI,
+          title: '',
+          availability: '',
+          phone: '',
+          description: '',
+          imageUrl: ''
+        });
       },
       error: (err) => console.error('Error while creating', err)
     });

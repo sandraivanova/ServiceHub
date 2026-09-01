@@ -49,7 +49,15 @@ export class ApiService {
     return this.http.get<IGivingService[]>('http://localhost:3000/api/giving-services', {params});
   }
 
-  create(serviceData: IGivingService) {
+  updateService(id: number | string, serviceData: IGivingService) {
+    return this.http.put<IGivingService>(`http://localhost:3000/api/giving-services/${id}`, serviceData);
+  }
+
+  deleteService(id: number | string) {
+    return this.http.delete(`http://localhost:3000/api/giving-services/${id}`);
+  }
+
+  createService(serviceData: IGivingService) {
     return this.http.post<IGivingService>('http://localhost:3000/api/giving-services', serviceData);
   }
 
