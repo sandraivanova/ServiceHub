@@ -12,15 +12,12 @@ export class ConfirmationEmail extends WorkerHost {
             `[Worker] Starting job ID: ${job.id}, Name: ${job.name}`,
         );
 
-        switch (job.name) {
-            case 'send-confirmation-email':
-                await this.sendEmail(job.data);
-                break;
-
-            default:
-                console.warn(
-                    `[Worker] Unknown job type: ${job.name}`,
-                );
+        if (job.name === 'send-confirmation-email') {
+            await this.sendEmail(job.data);
+        } else {
+            console.warn(
+                `[Worker] Unknown job type: ${job.name}`,
+            );
         }
 
         console.log(

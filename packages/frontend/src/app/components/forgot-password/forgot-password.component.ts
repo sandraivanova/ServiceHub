@@ -32,6 +32,7 @@ export class ForgotPasswordComponent {
     }
 
     const email = this.forgotForm.get('email')?.value!;
+    this.isLoading = true;
 
     this.apiService.forgotPassword(email).subscribe({
       next: (response) => {
@@ -40,6 +41,7 @@ export class ForgotPasswordComponent {
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'error';
+        this.isLoading = false;
       }
     })
 
