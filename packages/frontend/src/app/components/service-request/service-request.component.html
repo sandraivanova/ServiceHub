@@ -1,0 +1,181 @@
+<div class="page-container">
+
+  <div class="header-card">
+    <div>
+      <h1 class="header-title">Барам услуга</h1>
+      <p class="header-subtitle">Прегледајте отворени барања од клиенти кои имаат потреба од услуги</p>
+    </div>
+    <button (click)="openModal()" class="primary-btn">
+      <span class="text-lg font-bold">+</span> Објави барање – Барам услуга
+    </button>
+  </div>
+
+  <app-service-filter (filterChangeEmmiter)="onApplyFilterRequest($event)"></app-service-filter>
+
+  @if (isModalOpen) {
+    <div class="modal-backdrop">
+      <div class="modal-box">
+
+        <div class="modal-header">
+          <h2>Креирај ново барање</h2>
+          <button (click)="closeModal()" class="close-btn">&times;</button>
+        </div>
+
+        <form [formGroup]="serviceForm" (submit)="createServiceRequest()" class="modal-form">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label">Наслов</label>
+              <input type="text" placeholder="пр. Потребен водоинсталатер за дефект" formControlName="title" required class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Очекуван буџет (€)</label>
+              <input type="number" placeholder="пр. 40" formControlName="price" class="form-input">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label">Единица за цена</label>
+              <select formControlName="priceUnit" class="form-input form-select">
+                @for (unit of priceUnits; track unit) {
+                  <option [value]="unit">{{ priceUnitLabels[unit] }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Категорија</label>
+              <select formControlName="category" class="form-input form-select">
+                @for (cat of categories; track cat) {
+                  <option [value]="cat">{{ categoryLabels[cat] }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label">Итност</label>
+              <select formControlName="urgency" class="form-input form-select">
+                @for (urg of urgencies; track urg) {
+                  <option [value]="urg">{{urgencyLabels[urg] }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Начин на изведба</label>
+              <select formControlName="serviceMode" class="form-input form-select">
+                @for (mode of serviceModes; track mode) {
+                  <option [value]="mode">{{ serviceModeLabels[mode] }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label">Телефон за контакт</label>
+              <input type="text" placeholder="пр. 070 123 456" formControlName="phone" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Локација</label>
+              <select formControlName="location" class="form-input form-select">
+                @for (loc of locations; track loc) {
+                  <option [value]="loc">{{ locationLabels[loc] }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label class="form-label">Времетраење</label>
+              <input type="text" placeholder="пр. 2 часа / 3 дена" formControlName="duration" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Краен рок</label>
+              <input type="date" formControlName="deadline" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Опис</label>
+            <textarea placeholder="Внесете детален опис што точно треба да се направи..." formControlName="description" required rows="3" class="form-input form-textarea"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" (click)="closeModal()" class="cancel-btn">
+              Откажи
+            </button>
+            <button type="submit" class="submit-btn">
+              Објави барање
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  }
+
+  <div class="services-section">
+    @if (services$ | async; as services) {
+      <div class="section-header">
+        <h3>{{ services.length }} активни барања</h3>
+      </div>
+
+      <div class="services-grid">
+        @for (s of services; track s.id) {
+          <div class="service-card group">
+            <div>
+              <div class="flex justify-between items-start">
+                <span class="badge">
+                  {{ categoryLabels[s.category] }}
+                </span>
+                <span class="text-xs font-semibold px-2 py-1 bg-amber-100 text-amber-800 rounded">
+                  {{ s.urgency }}
+                </span>
+              </div>
+
+              <h4 class="service-title">
+                {{ s.title }}
+              </h4>
+              <p class="service-desc">
+                {{ s.description }}
+              </p>
+
+              <div class="location-box">
+                <span class="text-base">📍</span>
+                <span class="font-semibold text-slate-800">{{ locationLabels[s.location] }}</span>
+              </div>
+            </div>
+
+            <div class="footer-box">
+              <div>
+                @if (s.price) {
+                  <span class="price">{{ s.price }}€</span>
+                  @if (s.priceUnit) {
+                    <span class="unit">/ {{ priceUnitLabels[s.priceUnit] }}</span>
+                  }
+                } @else {
+                  <span class="text-sm text-slate-500 font-medium">По договор</span>
+                }
+              </div>
+              <a [routerLink]="['/service-request', s.id]" class="view-btn">
+                Погледни барање
+              </a>
+            </div>
+
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <div class="loading-text">Се вчитуваат барањата...</div>
+      </div>
+    }
+  </div>
+</div>

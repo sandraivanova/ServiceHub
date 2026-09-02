@@ -3,6 +3,7 @@ import {Injectable} from "@angular/core";
 import {IUser} from "@dnevnica/shared";
 import {Observable} from "rxjs";
 import { IGivingService,IReview } from '@dnevnica/shared';
+import {IServiceRequest} from "@dnevnica/shared/models/service_request";
 @Injectable({
   providedIn: "root",
 })
@@ -75,5 +76,35 @@ export class ApiService {
 
   updateReview(id: number, reviewData: IReview) {
     return this.http.put<IReview>(`http://localhost:3000/api/review/${id}`, reviewData);
+  }
+
+  updateServiceRequest(id: number | string, serviceData: IServiceRequest) {
+    return this.http.put<IServiceRequest>(`http://localhost:3000/api/service-request/${id}`, serviceData);
+  }
+
+  createServiceRequest(serviceData: IServiceRequest) {
+    return this.http.post<IServiceRequest>('http://localhost:3000/api/service-request', serviceData);
+  }
+
+  deleteServiceRequest(id: number | string) {
+    return this.http.delete(`http://localhost:3000/api/service-request/${id}`);
+  }
+
+  findOneServiceRequest(id: number | string) {
+    return this.http.get<IServiceRequest>(`http://localhost:3000/api/service-request/${id}`);
+  }
+
+  getAllServiceRequests(filters?: {
+    search?: string;
+    category?: string;
+    location?: string
+  }){
+    let params = new HttpParams();
+
+    if (filters?.search) params = params.set('search', filters.search);
+    if (filters?.category) params = params.set('category', filters.category);
+    if (filters?.location) params = params.set('location', filters.location);
+
+    return this.http.get<IServiceRequest[]>('http://localhost:3000/api/service-request', {params});
   }
 }
