@@ -1,17 +1,17 @@
 import {Injectable, NotFoundException} from "@nestjs/common";
 import {Op} from "sequelize";
 import {User} from "../../../models";
-import {IServiceRequest} from "@dnevnica/shared/models/service_request";
-import ServiceRequest from "models/src/db-models/service-request";
+import {IRequestService} from "@dnevnica/shared/models/request_service";
+import RequestService from "models/src/db-models/request-service";
 
 @Injectable()
-export class ServiceRequestService {
+export class RequestServiceService {
     constructor() {
     }
 
-    async create(serviceData: IServiceRequest, user_id: number) {
+    async create(serviceData: IRequestService, user_id: number) {
         serviceData.clientId = user_id
-        return await ServiceRequest.create(serviceData);
+        return await RequestService.create(serviceData);
     }
 
     async findAll(filters?: { title?: string; category?: string; location?: string }) {
@@ -29,7 +29,7 @@ export class ServiceRequestService {
             where.title = {[Op.like]: `%${filters.title}%`};
         }
 
-        return await ServiceRequest.findAll({
+        return await RequestService.findAll({
             where,
             include: [{
                 model: User,
@@ -39,7 +39,7 @@ export class ServiceRequestService {
     }
 
     async findOneByPk(id: number) {
-        const service = await ServiceRequest.findByPk(id, {
+        const service = await RequestService.findByPk(id, {
             include: [{
                 model: User,
                 as: 'client'
@@ -51,7 +51,7 @@ export class ServiceRequestService {
         return service;
     }
 
-    async update(id: number, serviceData: IServiceRequest) {
+    async update(id: number, serviceData: IRequestService) {
         const service = await this.findOneByPk(id);
 
         await service.update(serviceData);

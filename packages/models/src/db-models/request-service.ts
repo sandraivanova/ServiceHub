@@ -12,14 +12,14 @@ import {
 import User from "./user";
 import {Location, PriceUnit, ServiceCategory, Urgency} from "../../../shared/models";
 import {
-    IServiceRequest,
+    IRequestService,
     ServiceMode,
     TIME_PREFERENCE_LABELS,
     TimePreference
-} from "@dnevnica/shared/models/service_request";
+} from "@dnevnica/shared/models/request_service";
 
-@Table({ tableName: 'service-request', timestamps: true })
-export default class ServiceRequest extends Model<IServiceRequest>{
+@Table({ tableName: 'request-service', timestamps: true })
+export default class RequestService extends Model<IRequestService>{
 
     @Column({
         type: DataType.STRING,

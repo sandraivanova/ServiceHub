@@ -2,17 +2,17 @@ import {Controller, Get, Post, Body, Param, Put, Delete, Query, UseGuards} from 
 import {CurrentProfile} from "../middleware/decorators/currentProfile.decorator";
 import {JwtAuthGuard} from "../middleware/guards/jwt-auth.guard";
 import {User} from "../../../models";
-import {IServiceRequest} from "@dnevnica/shared/models/service_request";
-import {ServiceRequestService} from "../service/service_request.service";
+import {IRequestService} from "@dnevnica/shared/models/request_service";
+import {RequestServiceService} from "../service/request_service.service";
 
-@Controller('service-request')
-export class ServiceRequestController {
-    constructor(private readonly serviceRequestService: ServiceRequestService) {
+@Controller('request-service')
+export class RequestServiceController {
+    constructor(private readonly serviceRequestService: RequestServiceService) {
     }
 
     @Post()
     @UseGuards(JwtAuthGuard)
-    async create(@Body() body: IServiceRequest, @CurrentProfile() user: User) {
+    async create(@Body() body: IRequestService, @CurrentProfile() user: User) {
         return await this.serviceRequestService.create(body, user.id);
     }
 
@@ -33,7 +33,7 @@ export class ServiceRequestController {
     @Put(':id')
     async update(
         @Param('id') id: number,
-        @Body() body: IServiceRequest
+        @Body() body: IRequestService
     ) {
         return await this.serviceRequestService.update(id, body);
     }

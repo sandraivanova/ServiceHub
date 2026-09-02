@@ -38,7 +38,7 @@ export const routes: Routes = [
   },
 
   {
-    path: 'service-requests',
+    path: 'request-services',
     component: ServiceRequestComponent
   },
 ];

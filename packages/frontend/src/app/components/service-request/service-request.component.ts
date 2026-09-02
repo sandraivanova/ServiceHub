@@ -12,12 +12,12 @@ import {
   ServiceCategory, Urgency
 } from "@dnevnica/shared";
 import {
-  IServiceRequest,
+  IRequestService,
   SERVICE_MODE_LABELS,
   ServiceMode,
   TIME_PREFERENCE_LABELS,
   TimePreference
-} from "@dnevnica/shared/models/service_request";
+} from "@dnevnica/shared/models/request_service";
 import {ServiceFilterComponent} from "../service-filter/service-filter.component";
 import {RouterLink} from "@angular/router";
 import {AsyncPipe} from "@angular/common";
@@ -39,7 +39,7 @@ export class ServiceRequestComponent implements OnInit{
   private readonly apiService = inject(ApiService)
   private readonly fb = inject(FormBuilder);
 
-  services$!: Observable<IServiceRequest[]>
+  services$!: Observable<IRequestService[]>
   isModalOpen = false;
 
   priceUnitLabels = PRICE_UNIT_LABELS;

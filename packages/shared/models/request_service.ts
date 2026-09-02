@@ -2,7 +2,7 @@ import {DbModel} from "./db.model";
 import {IUser} from "./user";
 import {Location, PriceUnit, ServiceCategory, Urgency} from "./giving_service";
 
-export interface IServiceRequest extends DbModel {
+export interface IRequestService extends DbModel {
     clientId: number;
     title: string;
     price?: number;

@@ -3,7 +3,7 @@ import {Injectable} from "@angular/core";
 import {IUser} from "@dnevnica/shared";
 import {Observable} from "rxjs";
 import { IGivingService,IReview } from '@dnevnica/shared';
-import {IServiceRequest} from "@dnevnica/shared/models/service_request";
+import {IRequestService} from "@dnevnica/shared/models/request_service";
 @Injectable({
   providedIn: "root",
 })
@@ -78,20 +78,20 @@ export class ApiService {
     return this.http.put<IReview>(`http://localhost:3000/api/review/${id}`, reviewData);
   }
 
-  updateServiceRequest(id: number | string, serviceData: IServiceRequest) {
-    return this.http.put<IServiceRequest>(`http://localhost:3000/api/service-request/${id}`, serviceData);
+  updateServiceRequest(id: number | string, serviceData: IRequestService) {
+    return this.http.put<IRequestService>(`http://localhost:3000/api/request-service/${id}`, serviceData);
   }
 
-  createServiceRequest(serviceData: IServiceRequest) {
-    return this.http.post<IServiceRequest>('http://localhost:3000/api/service-request', serviceData);
+  createServiceRequest(serviceData: IRequestService) {
+    return this.http.post<IRequestService>('http://localhost:3000/api/request-service', serviceData);
   }
 
   deleteServiceRequest(id: number | string) {
-    return this.http.delete(`http://localhost:3000/api/service-request/${id}`);
+    return this.http.delete(`http://localhost:3000/api/request-service/${id}`);
   }
 
   findOneServiceRequest(id: number | string) {
-    return this.http.get<IServiceRequest>(`http://localhost:3000/api/service-request/${id}`);
+    return this.http.get<IRequestService>(`http://localhost:3000/api/request-service/${id}`);
   }
 
   getAllServiceRequests(filters?: {
@@ -105,6 +105,6 @@ export class ApiService {
     if (filters?.category) params = params.set('category', filters.category);
     if (filters?.location) params = params.set('location', filters.location);
 
-    return this.http.get<IServiceRequest[]>('http://localhost:3000/api/service-request', {params});
+    return this.http.get<IRequestService[]>('http://localhost:3000/api/request-service', {params});
   }
 }

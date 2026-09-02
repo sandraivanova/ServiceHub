@@ -20,9 +20,9 @@ import {BullModule} from "@nestjs/bullmq";
 import {WelcomeEmail} from "./bullmq/queues/welcome.email.processor";
 import {EmailProcessor} from "./bullmq/queues/EmailConfirmationProcessor";
 import {EmailConfirmationService} from "./bullmq/queues/EmailConfirmationService";
-import {ServiceRequestService} from "./service/service_request.service";
-import ServiceRequest from "models/src/db-models/service-request";
-import {ServiceRequestController} from "./server/service_request.controller";
+import {RequestServiceService} from "./service/request_service.service";
+import RequestService from "models/src/db-models/request-service";
+import {RequestServiceController} from "./server/request_service.controller";
 
 const CONTROLLERS = [
     AppController,
@@ -30,14 +30,14 @@ const CONTROLLERS = [
     AuthController,
     GivingServicesController,
     ReviewController,
-    ServiceRequestController
+    RequestServiceController
 ]
 
 const MODELS = [
     User,
     GivingService,
     Review,
-    ServiceRequest
+    RequestService
 ]
 
 const SERVICES = [
@@ -46,7 +46,7 @@ const SERVICES = [
     AuthService,
     GivingServicesService,
     ReviewService,
-    ServiceRequestService
+    RequestServiceService
 ]
 
 const EMAIL_CONFIGS=[
