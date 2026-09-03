@@ -1,14 +1,27 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards} from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    Post,
+    Put,
+    UnauthorizedException,
+    UseGuards
+} from "@nestjs/common";
 import {UsersService} from "../service/user.service";
 import {IUser} from "../../../shared/models";
 import {CurrentProfile} from "../middleware/decorators/currentProfile.decorator";
 import {JwtAuthGuard} from "../middleware/guards/jwt-auth.guard";
 import {User} from "../../../models";
+import {EmailService} from "../bullmq/queues/EmailService";
 
 
 @Controller('users')
 export class UserController {
-    constructor(private readonly userService: UsersService) {
+    constructor(private readonly userService: UsersService,
+                private readonly emailService: EmailService) {
     }
 
     @Get('current-user')
@@ -19,7 +32,12 @@ export class UserController {
 
     @Post()
     async create(@Body() userData: IUser) {
-        return this.userService.create(userData)
+        let user = await this.userService.create(userData);
+        if (!user) {
+            throw new NotFoundException();
+        }
+        await this.emailService.sendWelcomeEmail(user.email, user.firstName)
+        return user;
     }
 
     @Get()

@@ -8,4 +8,6 @@ export interface IUser extends DbModel {
     password: string;
     isEmailVerified?: boolean;
     reviews?: IReview[];
+    resetPasswordExpires?: Date;
+    resetPasswordToken?: string;
 }

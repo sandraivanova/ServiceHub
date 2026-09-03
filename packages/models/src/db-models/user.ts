@@ -39,6 +39,18 @@ export default class User extends Model<IUser> {
     })
     declare isEmailVerified: boolean;
 
+    @Column({
+        type: DataType.STRING,
+        allowNull: true,
+    })
+    declare resetPasswordToken: string;
+
+    @Column({
+        type: DataType.DATE,
+        allowNull: true,
+    })
+    declare resetPasswordExpires: Date;
+
     @CreatedAt
     @Column({
         type: DataType.DATE,

@@ -1,15 +1,9 @@
 import {ConflictException, Injectable, NotFoundException} from "@nestjs/common";
 import {User} from "../../../models";
 import {IUser} from "@dnevnica/shared/models";
-import {Queue} from "bullmq";
-import {InjectQueue} from "@nestjs/bullmq";
 
 @Injectable()
 export class UsersService {
-    constructor(
-        @InjectQueue('email-queue') private readonly emailQueue: Queue
-    ) {
-    }
 
     async create(userData: IUser) {
         const existingUser = await this.findByEmail(userData.email);
@@ -18,21 +12,6 @@ export class UsersService {
         }
 
         const newUser = await User.create(userData);
-
-        await this.emailQueue.add(
-            'send-welcome-email',
-            {
-                email: newUser.email,
-                name: newUser.firstName,
-            },
-            {
-                attempts: 3,
-                backoff: {
-                    type: 'exponential',
-                    delay: 2000,
-                },
-            }
-        );
 
         return newUser;
     }

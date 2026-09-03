@@ -21,7 +21,7 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
   templateUrl: './giving-service-detail.component.html',
   styleUrls: ['./giving-service-detail.component.scss']
 })
-export class GivingServiceDetailComponent implements OnInit {
+export class GivingServiceDetailsComponent implements OnInit {
 
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
