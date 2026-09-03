@@ -2,17 +2,17 @@ import {Processor, WorkerHost} from '@nestjs/bullmq';
 import {Job} from 'bullmq';
 import {mailTransporter} from '../../config/email';
 
-@Processor('confirmation-queue')
-export class ConfirmationEmail extends WorkerHost {
+@Processor('password-reset-queue')
+export class PasswordResetEmail extends WorkerHost {
 
-  private transporter = mailTransporter;
+    private transporter = mailTransporter;
 
     async process(job: Job<any, any, string>): Promise<any> {
         console.log(
             `[Worker] Starting job ID: ${job.id}, Name: ${job.name}`,
         );
 
-        if (job.name === 'send-confirmation-email') {
+        if (job.name === 'send-password-reset-email') {
             await this.sendEmail(job.data);
         } else {
             console.warn(
@@ -35,12 +35,12 @@ export class ConfirmationEmail extends WorkerHost {
         template: string;
         context: {
             name: string;
-            confirmationUrl: string;
+            resetUrl: string;
         };
     }) {
         try {
             console.log(
-                `[Email Service] Sending confirmation email to: ${data.to}...`,
+                `[Email Service] Sending password reset email to: ${data.to}...`,
             );
 
             const info = await this.transporter.sendMail({
@@ -52,11 +52,11 @@ export class ConfirmationEmail extends WorkerHost {
             } as any);
 
             console.log(
-                `[Email Service] Confirmation email sent successfully: ${info.messageId}`,
+                `[Email Service] Password reset email sent successfully: ${info.messageId}`,
             );
         } catch (error) {
             console.error(
-                `[Email Service] Failed to send confirmation email:`,
+                `[Email Service] Failed to send password reset email:`,
                 error,
             );
 

@@ -5,7 +5,9 @@ import {encryptPassword} from "../../../webhooks/utils/encrypt-password.utils";
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly jwtService: JwtService) {}
+    constructor(private readonly jwtService: JwtService,
+    ) {
+    }
 
     async validateUser(email: string, pass: string) {
         const user = await User.findOne({where: {email}});

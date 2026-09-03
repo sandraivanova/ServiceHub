@@ -26,6 +26,13 @@
         formControlName="password"
         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
+
+      <div class="flex justify-end mt-1">
+        <a routerLink="/forgot-password" class="text-xs text-blue-600 hover:underline">
+          Заборавена лозинка?
+        </a>
+      </div>
+
       @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
         <div class="text-red-500 text-xs mt-1">
           Лозинката мора да има најмалку 6 карактери.

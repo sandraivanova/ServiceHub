@@ -28,6 +28,14 @@ export class ApiService {
     return this.http.post<any>('http://localhost:3000/api/auth/token', { refreshToken });
   }
 
+  forgotPassword(email: string) {
+    return this.http.post<any>('http://localhost:3000/api/auth/forgot-password', { email });
+  }
+
+  resetPassword(token: string, newPassword: string) {
+    return this.http.post<any>('http://localhost:3000/api/auth/reset-password', { token, newPassword });
+  }
+
   getAllGivingServices(filters?: {
     search?: string;
     category?: string;

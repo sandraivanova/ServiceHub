@@ -17,9 +17,11 @@ import {ReviewService} from "./service/review.service";
 import Redis from 'ioredis';
 import {getRedisConnection} from "./utils/redis.utils";
 import {BullModule} from "@nestjs/bullmq";
-import {WelcomeEmail} from "./bullmq/queues/welcome.email.processor";
-import {EmailProcessor} from "./bullmq/queues/EmailConfirmationProcessor";
-import {EmailConfirmationService} from "./bullmq/queues/EmailConfirmationService";
+
+import {EmailService} from "./bullmq/queues/EmailService";
+import {WelcomeEmail} from "./bullmq/queues/WelcomeEmailProcessor";
+import {ConfirmationEmail} from "./bullmq/queues/EmailConfirmationProcessor";
+import {PasswordResetEmail} from "./bullmq/queues/PasswordResetProcessor";
 import {RequestServiceService} from "./service/request_service.service";
 import RequestService from "models/src/db-models/request-service";
 import {RequestServiceController} from "./server/request_service.controller";
@@ -49,10 +51,11 @@ const SERVICES = [
     RequestServiceService
 ]
 
-const EMAIL_CONFIGS=[
+const EMAIL_CONFIGS = [
     WelcomeEmail,
-    EmailProcessor,
-    EmailConfirmationService
+    ConfirmationEmail,
+    PasswordResetEmail,
+    EmailService
 ]
 
 @Module({
@@ -68,10 +71,13 @@ const EMAIL_CONFIGS=[
 
         BullModule.registerQueue(
             {
-                name: 'email-queue',
+                name: 'welcome-queue',
             },
             {
                 name: 'confirmation-queue',
+            },
+            {
+                name: 'password-reset-queue'
             }
         ),
 

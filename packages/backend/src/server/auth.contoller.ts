@@ -13,7 +13,10 @@ import {Request} from 'express';
 import {encryptPassword} from "../../../webhooks/utils/encrypt-password.utils";
 import {UsersService} from "../service/user.service";
 import {IUser} from "@dnevnica/shared/models"
-import {EmailConfirmationService} from "../bullmq/queues/EmailConfirmationService";
+import {EmailService} from "../bullmq/queues/EmailService";
+import * as crypto from 'crypto';
+import {Op} from 'sequelize';
+import {User} from "models";
 
 const JWT_SECRET = process.env.JWT_SECRET || 'access-secret-key';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh-secret-key';
@@ -22,7 +25,7 @@ const REFRESH_SECRET = process.env.REFRESH_SECRET || 'refresh-secret-key';
 export class AuthController {
 
     constructor(private readonly userService: UsersService,
-                private readonly emailQueueService: EmailConfirmationService
+                private readonly emailService: EmailService
     ) {
     }
 
@@ -121,7 +124,7 @@ export class AuthController {
             {expiresIn: '1d'}
         );
 
-        await this.emailQueueService.sendConfirmationEmail(
+        await this.emailService.sendConfirmationEmail(
             newUser.email,
             newUser.firstName,
             verificationToken
@@ -155,6 +158,71 @@ export class AuthController {
         } catch (e) {
             throw new BadRequestException('Invalid or expired verification link.');
         }
+    }
+
+    @Post('forgot-password')
+    @HttpCode(200)
+    async forgotPassword(@Body() body: { email: string }) {
+        const {email} = body;
+
+        if (!email) {
+            throw new BadRequestException({message: 'Email is required'});
+        }
+
+        const user = await this.userService.findByEmail(email);
+        if (!user) {
+            return {message: 'If that email exists in our system, we have sent a password reset link.'};
+        }
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+        const tokenExpires = new Date(Date.now() + 30 * 60 * 1000);
+
+        await this.userService.update(user.id, {
+            resetPasswordToken: hashedToken,
+            resetPasswordExpires: tokenExpires,
+        });
+
+        await this.emailService.sendPasswordResetEmail(
+            user.email,
+            user.firstName,
+            resetToken
+        );
+
+        return {message: 'If that email exists in our system, we have sent a password reset link.'};
+    }
+
+    @Post('reset-password')
+    @HttpCode(200)
+    async resetPassword(@Body() body: { token: string; newPassword: string }) {
+        const {token, newPassword} = body;
+
+        if (!token || !newPassword) {
+            throw new BadRequestException({message: 'Token and new password are required'});
+        }
+
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        const user = await User.findOne({
+            where: {
+                resetPasswordToken: hashedToken,
+                resetPasswordExpires: {[Op.gt]: new Date()},
+            },
+        });
+
+        if (!user) {
+            throw new BadRequestException({message: 'The password reset token is invalid or has expired.'});
+        }
+
+        const hashedPassword = await encryptPassword(newPassword);
+
+        await this.userService.update(user.id, {
+            password: hashedPassword,
+            resetPasswordToken: undefined,
+            resetPasswordExpires: undefined,
+        });
+
+        return {message: 'Password successfully changed. You can now log in.'};
     }
 }
 
