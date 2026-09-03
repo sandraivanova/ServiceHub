@@ -1,0 +1,313 @@
+@if (service$ | async; as service) {
+  <div class="service-container">
+
+    @if (currentUser$ | async; as currentUser) {
+      @if (currentUser.id === service.client?.id) {
+        <div class="provider-actions">
+          <button (click)="openEditModal(service)" class="edit-btn">
+            ✏️ Уреди барање
+          </button>
+          <button (click)="openDeleteModal()" class="delete-btn-action">
+            🗑️ Избриши барање
+          </button>
+        </div>
+      }
+    }
+
+    <div class="banner-card">
+      <div class="banner-glow"></div>
+      <div class="banner-content">
+        <div class="banner-header">
+          <span class="category-badge">
+            {{ categoryLabels[service.category] }}
+          </span>
+          <div class="location-badge">
+            <span>📍</span> Локација: <span class="text-white font-semibold">{{ locationLabels[service.location] }}</span>
+          </div>
+        </div>
+
+        <h1 class="banner-title">
+          {{ service.title }}
+        </h1>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon blue">💶</div>
+        <div>
+          <span class="stat-label">Очекуван буџет</span>
+          <div class="stat-value">
+            @if (service.price) {
+              {{ service.price }}€ <span class="text-xs font-normal text-slate-500">@if(service.priceUnit) { / {{ priceUnitLabels[service.priceUnit] }} }</span>
+            } @else {
+              По договор
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon indigo">⚡</div>
+        <div>
+          <span class="stat-label">Итност</span>
+          <div class="stat-value uppercase font-bold text-amber-600">
+            {{ urgencyLabels[service.urgency] || service.urgency }}
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon emerald">🕒</div>
+        <div>
+          <span class="stat-label">Начин на изведба</span>
+          <div class="stat-availability">
+            {{ serviceModeLabels[service.serviceMode] || service.serviceMode }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid mt-4">
+      <div class="stat-card">
+        <div class="stat-icon blue">⏳</div>
+        <div>
+          <span class="stat-label">Години искуство</span>
+          <div class="stat-value text-sm font-medium">
+            {{ service.yearsOfExperience ? service.yearsOfExperience + ' год.' : 'Не е наведено' }}
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon indigo">📅</div>
+        <div>
+          <span class="stat-label">Краен рок</span>
+          <div class="stat-value text-sm font-medium">
+            {{ service.deadline ? (service.deadline | date:'dd.MM.yyyy') : 'Нема рок' }}
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon emerald">⏱️</div>
+        <div>
+          <span class="stat-label">Времетраење</span>
+          <div class="stat-value text-sm font-medium">
+            {{ service.duration || 'Не е наведено' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-grid mt-4">
+      <div class="stat-card">
+        <div class="stat-icon blue">⏰</div>
+        <div>
+          <span class="stat-label">Време на преференца</span>
+          <div class="stat-value text-sm font-medium">
+            {{ service.timePreference ? timePreferenceLabels[service.timePreference] : 'Флексибилно' }}
+          </div>
+        </div>
+      </div>
+
+      @if (service.imageUrl) {
+        <div class="stat-card">
+          <div class="stat-icon indigo">🖼️</div>
+          <div>
+            <span class="stat-label">Прикачена слика</span>
+            <div class="stat-value text-sm font-medium">
+              <a [href]="service.imageUrl" target="_blank" class="text-blue-600 underline">Види слика</a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="content-card">
+      <h3 class="section-title">
+        <span>📄</span> Опис на барањето
+      </h3>
+      <p class="section-text">
+        {{ service.description }}
+      </p>
+    </div>
+
+    <div class="provider-section">
+      <h3 class="section-title">
+        <span>👤</span> Информации за клиентот
+      </h3>
+
+      <div class="provider-box">
+        <div class="provider-info">
+          <div class="provider-avatar">
+            {{ service.client?.firstName?.charAt(0) || 'К' }}{{ service.client?.lastName?.charAt(0) || '' }}
+          </div>
+          <div>
+            <span class="stat-label">Клиент</span>
+            <h4 class="provider-name">
+              {{ service.client?.firstName || 'Анонимен' }} {{ service.client?.lastName || '' }}
+            </h4>
+          </div>
+        </div>
+
+        <div>
+          <a href="tel:{{ service.phone }}" class="call-btn">
+            <span>📞</span> {{ service.phone || 'Нема телефон' }}
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  @if (isDeleteModalOpen) {
+    <div class="modal-backdrop" (click)="closeDeleteModal()">
+      <div class="modal-box delete-modal-content" (click)="$event.stopPropagation()">
+        <div class="delete-icon-wrapper">
+          🗑️
+        </div>
+
+        <div>
+          <h3 class="modal-main-title">Избриши барање</h3>
+          <p class="modal-subtitle">Дали сте сигурни дека сакате да го избришете ова барање? Оваа акција не може да се врати.</p>
+        </div>
+
+        <div class="modal-actions-footer">
+          <button type="button" (click)="closeDeleteModal()" class="btn-secondary">
+            Откажи
+          </button>
+          <button type="button" (click)="confirmDelete()" class="btn-danger">
+            Да, избриши
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @else if (isEditModalOpen) {
+    <div class="modal-backdrop">
+      <div class="modal-box edit-modal-box">
+        <div class="modal-header">
+          <h2>Уреди го барањето</h2>
+          <button (click)="closeEditModal()" class="close-btn">&times;</button>
+        </div>
+
+        <form [formGroup]="serviceForm" (submit)="updateService()" class="modal-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Наслов</label>
+              <input type="text" formControlName="title" required class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Очекуван буџет (€)</label>
+              <input type="number" formControlName="price" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Единица за цена</label>
+              <select formControlName="priceUnit" class="form-input form-select">
+                <option [value]="null">Избери единица</option>
+                @for (unit of priceUnits; track unit) {
+                  <option [value]="unit">{{ priceUnitLabels[unit] }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Категорија</label>
+              <select formControlName="category" class="form-input form-select">
+                @for (cat of categories; track cat) {
+                  <option [value]="cat">{{ categoryLabels[cat] }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Итност</label>
+              <select formControlName="urgency" class="form-input form-select">
+                @for (urg of urgencies; track urg) {
+                  <option [value]="urg">{{ urgencyLabels[urg] }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Начин на изведба</label>
+              <select formControlName="serviceMode" class="form-input form-select">
+                @for (mode of serviceModes; track mode) {
+                  <option [value]="mode">{{ serviceModeLabels[mode] }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Време на преференца</label>
+              <select formControlName="timePreference" class="form-input form-select">
+                <option [value]="null">Флексибилно</option>
+                @for (timePref of timePreferences; track timePref) {
+                  <option [value]="timePref">{{ timePreferenceLabels[timePref] }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Телефон за контакт</label>
+              <input type="text" formControlName="phone" required class="form-input">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Времетраење</label>
+              <input type="text" formControlName="duration" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Краен рок</label>
+              <input type="date" formControlName="deadline" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Локација</label>
+              <select formControlName="location" class="form-input form-select">
+                @for (loc of locations; track loc) {
+                  <option [value]="loc">{{ locationLabels[loc] }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Години искуство</label>
+              <input type="number" formControlName="yearsOfExperience" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Линк од слика (опционално)</label>
+            <input type="text" formControlName="imageUrl" class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Опис</label>
+            <textarea formControlName="description" required rows="3" class="form-input form-textarea"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" (click)="closeEditModal()" class="cancel-btn">Откажи</button>
+            <button type="submit" class="submit-btn">Ажурирај барање</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+} @else {
+  <div class="loading-container">
+    <div class="spinner"></div>
+    <div class="loading-text">Се вчитуваат деталите за барањето...</div>
+  </div>
+}

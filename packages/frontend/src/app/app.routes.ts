@@ -8,6 +8,7 @@ import {GivingServiceDetailsComponent} from "./components/giving-service-detail/
 import {HowItWorksComponent} from "./components/how-it-works/how-it-works.component";
 import {ForgotPasswordComponent} from "./components/forgot-password/forgot-password.component";
 import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
+import {RequestServiceDetailsComponent} from "./components/request-service-details/request-service-details.component";
 
 export const routes: Routes = [
   {
@@ -58,5 +59,10 @@ export const routes: Routes = [
   {
     path: 'request-services',
     component: ServiceRequestComponent
+  },
+
+  {
+    path: 'request-services/:id',
+    component: RequestServiceDetailsComponent
   },
 ];
