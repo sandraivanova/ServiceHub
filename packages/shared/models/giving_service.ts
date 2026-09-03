@@ -20,6 +20,12 @@ export interface IGivingService extends DbModel {
     provider: IUser;
 }
 
+export enum Urgency {
+    LOW = 'LOW',
+    URGENT = 'URGENT',
+    NORMAL = 'NORMAL',
+}
+
 export enum PriceUnit {
     HOUR = 'HOUR',
     PROJECT = 'PROJECT',
@@ -87,6 +93,14 @@ export enum Location {
     VELES = 'VELES',
     VINICA = 'VINICA'
 }
+
+export const URGENCY_LABELS:
+    Record<Urgency, string> = {
+    [Urgency.LOW]: 'ниско',
+    [Urgency.URGENT]: 'итно',
+    [Urgency.NORMAL]: 'нормално',
+};
+
 
 export const PRICE_UNIT_LABELS:
     Record<PriceUnit, string> = {

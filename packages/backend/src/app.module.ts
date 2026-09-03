@@ -22,19 +22,24 @@ import {EmailService} from "./bullmq/queues/EmailService";
 import {WelcomeEmail} from "./bullmq/queues/WelcomeEmailProcessor";
 import {ConfirmationEmail} from "./bullmq/queues/EmailConfirmationProcessor";
 import {PasswordResetEmail} from "./bullmq/queues/PasswordResetProcessor";
+import {RequestServiceService} from "./service/request_service.service";
+import RequestService from "models/src/db-models/request-service";
+import {RequestServiceController} from "./server/request_service.controller";
 
 const CONTROLLERS = [
     AppController,
     UserController,
     AuthController,
     GivingServicesController,
-    ReviewController
+    ReviewController,
+    RequestServiceController
 ]
 
 const MODELS = [
     User,
     GivingService,
-    Review
+    Review,
+    RequestService
 ]
 
 const SERVICES = [
@@ -42,7 +47,8 @@ const SERVICES = [
     UsersService,
     AuthService,
     GivingServicesService,
-    ReviewService
+    ReviewService,
+    RequestServiceService
 ]
 
 const EMAIL_CONFIGS = [

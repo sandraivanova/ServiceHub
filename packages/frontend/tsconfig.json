@@ -18,14 +18,16 @@
     "importHelpers": true,
     "baseUrl": ".",
     "paths": {
-      "@dnevnica/shared": ["../shared/models/index.ts"]
+      "@dnevnica/shared": ["../shared/models/index.ts"],
+      "rxjs": ["../../node_modules/rxjs"],
+      "rxjs/*": ["../../node_modules/rxjs/*"]
     },
     "target": "ES2022",
     "module": "ES2022",
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

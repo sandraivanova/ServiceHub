@@ -3,10 +3,12 @@ import {LoginComponent} from "./components/login/login.component";
 import {MainComponent} from "./components/main/main.component";
 import {RegisterComponent} from "./components/register/register.component";
 import {GivingServicesComponent} from "./components/giving-services/giving-services.component";
+import {ServiceRequestComponent} from "./components/service-request/service-request.component";
 import {GivingServiceDetailsComponent} from "./components/giving-service-detail/giving-service-detail.component";
 import {HowItWorksComponent} from "./components/how-it-works/how-it-works.component";
 import {ForgotPasswordComponent} from "./components/forgot-password/forgot-password.component";
 import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
+import {RequestServiceDetailsComponent} from "./components/request-service-details/request-service-details.component";
 
 export const routes: Routes = [
   {
@@ -43,6 +45,7 @@ export const routes: Routes = [
     path: 'home',
     component: MainComponent
   },
+
   {
     path: 'giving-services',
     component: GivingServicesComponent
@@ -51,5 +54,15 @@ export const routes: Routes = [
   {
     path: 'giving-services/:id',
     component: GivingServiceDetailsComponent
+  },
+
+  {
+    path: 'request-services',
+    component: ServiceRequestComponent
+  },
+
+  {
+    path: 'request-services/:id',
+    component: RequestServiceDetailsComponent
   },
 ];
