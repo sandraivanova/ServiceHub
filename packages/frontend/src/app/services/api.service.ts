@@ -36,6 +36,10 @@ export class ApiService {
     return this.http.post<any>('http://localhost:3000/api/auth/reset-password', { token, newPassword });
   }
 
+  updateCurrentUser(id: number, userData: Partial<IUser>) {
+    return this.http.put<IUser>(`http://localhost:3000/api/users/${id}`, userData);
+  }
+
   getAllGivingServices(filters?: {
     search?: string;
     category?: string;

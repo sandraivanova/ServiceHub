@@ -1,0 +1,90 @@
+/* ******************************
+   HOW IT WORKS - COMPONENT STYLES
+   Користиме @apply директиви од Tailwind CSS за модерен изглед.
+   ****************************** */
+
+.how-it-works-page {
+  @apply bg-slate-50 py-12 md:py-20;
+
+  // Глобални стилови за текст и контејнер
+  .container {
+    @apply max-w-7xl mx-auto px-4 md:px-6;
+  }
+
+  .section-title {
+    @apply text-2xl md:text-4xl font-extrabold tracking-tight text-slate-900 text-center mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-slate-600 text-center mb-12 max-w-2xl;
+  }
+
+  .badge-primary {
+    @apply inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-wider;
+  }
+
+  // Херо Секција
+  .hero-section {
+    @apply pt-10 pb-24 bg-slate-50;
+
+    .hero-title {
+      @apply text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight;
+    }
+
+    .hero-subtitle {
+      @apply text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-light;
+    }
+  }
+
+  // Секција со чекори
+  .steps-section {
+    @apply -mt-16 pb-20;
+
+    .step-card {
+      @apply bg-white p-8 rounded-2xl shadow-xl shadow-slate-300/10 border border-slate-100 text-center space-y-5 relative z-10 hover:-translate-y-1 transition-transform duration-300 ease-in-out;
+
+      // Индекс за броење на чекор
+      .step-number {
+        @apply absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-full text-lg font-bold shadow-lg shadow-blue-500/30;
+      }
+
+      .step-icon-wrapper {
+        @apply flex justify-center mb-10;
+      }
+
+      .step-icon {
+        @apply text-6xl block;
+      }
+
+      .step-title {
+        @apply text-xl font-bold text-slate-900 tracking-tight;
+      }
+
+      .step-text {
+        @apply text-slate-600 leading-relaxed text-sm font-light;
+      }
+    }
+  }
+
+  // Секција за придобивки
+  .benefits-section {
+    @apply py-20 bg-slate-50;
+
+    .benefit-item {
+      @apply flex items-start gap-4;
+    }
+
+    .benefit-icon {
+      @apply w-7 h-7 rounded-full flex items-center justify-center text-white font-bold shrink-0 mt-0.5;
+
+      &.green { @apply bg-emerald-500; }
+      &.blue { @apply bg-blue-500; }
+      &.indigo { @apply bg-indigo-500; }
+    }
+  }
+
+  // CTA Секција
+  .cta-section {
+    @apply py-20 bg-slate-50;
+  }
+}

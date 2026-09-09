@@ -9,6 +9,7 @@ import {HowItWorksComponent} from "./components/how-it-works/how-it-works.compon
 import {ForgotPasswordComponent} from "./components/forgot-password/forgot-password.component";
 import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
 import {RequestServiceDetailsComponent} from "./components/request-service-details/request-service-details.component";
+import {ProfileComponent} from "./components/profile/profile.component";
 
 export const routes: Routes = [
   {
@@ -39,6 +40,11 @@ export const routes: Routes = [
   {
     path: 'reset-password',
     component: ResetPasswordComponent
+  },
+
+  {
+    path: 'profile',
+    component: ProfileComponent
   },
 
   {
