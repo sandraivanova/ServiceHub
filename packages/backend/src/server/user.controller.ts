@@ -63,4 +63,18 @@ export class UserController {
         return this.userService.remove(id);
     }
 
+    @Put('me')
+    @UseGuards(JwtAuthGuard)
+    async updateProfile(
+        @CurrentProfile() user: User,
+        @Body() body: { firstName?: string; lastName?: string; email?: string; phone?: string }
+    ) {
+        const allowedData: Partial<IUser> = {};
+        if (body.firstName !== undefined) allowedData.firstName = body.firstName;
+        if (body.lastName !== undefined) allowedData.lastName = body.lastName;
+        if (body.email !== undefined) allowedData.email = body.email;
+
+        return this.userService.update(user.id, allowedData);
+    }
+
 }
