@@ -2,7 +2,7 @@
   <div class="service-container">
 
     @if (currentUser$ | async; as currentUser) {
-      @if (currentUser.id === service.client?.id) {
+      @if (currentUser.id === service.client.id) {
         <div class="provider-actions">
           <button (click)="openEditModal(service)" class="edit-btn">
             ✏️ Уреди барање
@@ -141,12 +141,12 @@
       <div class="provider-box">
         <div class="provider-info">
           <div class="provider-avatar">
-            {{ service.client?.firstName?.charAt(0) || 'К' }}{{ service.client?.lastName?.charAt(0) || '' }}
+            {{ service.client.firstName.charAt(0) || 'К' }}{{ service.client.lastName.charAt(0) || '' }}
           </div>
           <div>
             <span class="stat-label">Клиент</span>
             <h4 class="provider-name">
-              {{ service.client?.firstName || 'Анонимен' }} {{ service.client?.lastName || '' }}
+              {{ service.client.firstName || 'Анонимен' }} {{ service.client.lastName || '' }}
             </h4>
           </div>
         </div>
