@@ -1,0 +1,8 @@
+# Every ServiceHub resource lives in this namespace, so the whole app can
+# be inspected, torn down, or reasoned about as one unit:
+#   kubectl get all -n servicehub
+#   kubectl delete namespace servicehub
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: servicehub

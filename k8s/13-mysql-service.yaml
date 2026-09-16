@@ -1,0 +1,18 @@
+# A headless Service (clusterIP: None) is the conventional pairing for a
+# StatefulSet: instead of load-balancing across replicas like a normal
+# Service, it gives each pod its own stable DNS name
+# (mysql-0.mysql.servicehub.svc.cluster.local). With one replica this
+# mostly matters for consistency/future-proofing, but "mysql" is still
+# exactly what the backend's DB_HOST should point at.
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: servicehub
+spec:
+  clusterIP: None
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306

@@ -1,0 +1,38 @@
+# Replace "REPLACE_WITH_DOCKERHUB_USERNAME" the same way as in
+# 32-backend-deployment.yaml. No ConfigMap/Secret here - the frontend is
+# a static build with no server-side config of its own; it talks to the
+# backend through relative "/api/..." requests (see
+# docker/frontend.nginx.conf and docs/01-dockerization.md), so it doesn't
+# need to know a hostname at all.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: servicehub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: REPLACE_WITH_DOCKERHUB_USERNAME/servicehub-frontend:latest
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 20

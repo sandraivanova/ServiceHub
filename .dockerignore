@@ -1,0 +1,14 @@
+node_modules
+**/node_modules
+**/build
+**/dist
+**/coverage
+.git
+.idea
+.vscode
+docs
+k8s
+*.md
+.env
+.env.*
+!.env.example

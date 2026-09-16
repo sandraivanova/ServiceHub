@@ -15,7 +15,7 @@ const handlebarOptions: NodemailerExpressHandlebarsOptions = {
     viewEngine: {
         extname: '.handlebars',
         layoutsDir: path.resolve('./views/mail'),
-        defaultLayout: false,
+        defaultLayout: undefined,
     },
     viewPath: path.resolve('./views/mail'),
     extName: '.handlebars',

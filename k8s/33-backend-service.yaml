@@ -1,0 +1,14 @@
+# ClusterIP (the default type): only reachable from inside the cluster,
+# by the frontend and by the Ingress - exactly what's needed, since the
+# backend isn't meant to be hit directly from outside.
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: servicehub
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 3000
+      targetPort: 3000

@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit() {
-    this.http.get<{ message: string }>('http://localhost:3000/api/test')
+    this.http.get<{ message: string }>('/api/test')
       .subscribe({
         next: (response) => {
           this.message = response.message;

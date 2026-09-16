@@ -1,0 +1,11 @@
+# Non-secret MySQL configuration. Split from 11-mysql-secret.yaml because
+# a database name isn't sensitive but a password is - they're different
+# kinds of data with different handling (Secrets are base64-encoded and
+# can be restricted with RBAC; ConfigMaps are plain text).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: servicehub
+data:
+  MYSQL_DATABASE: "servicehub"

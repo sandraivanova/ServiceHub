@@ -1,0 +1,38 @@
+# Single entry point into the app. Path-based routing: anything under
+# /api goes straight to the backend Service, everything else goes to the
+# frontend. This mirrors exactly what docker/frontend.nginx.conf does for
+# Docker Compose - same routing rule, enforced by the ingress-nginx
+# controller instead of nginx running inside the frontend container.
+#
+# No path rewriting: the backend itself expects requests at "/api/..."
+# (see app.setGlobalPrefix('api') in packages/backend/src/main.ts), so
+# the "/api" prefix is forwarded as-is rather than stripped.
+#
+# "servicehub.local" only resolves if you add it to /etc/hosts pointing
+# at your cluster's ingress IP - see docs/08-kubernetes-namespace-demo.md
+# for the exact steps with kind.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: servicehub
+  namespace: servicehub
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: servicehub.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 3000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
